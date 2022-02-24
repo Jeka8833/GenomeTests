@@ -1,0 +1,74 @@
+<root>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive com.Jeka8833.GenomeTests.testWorld.Genome getGenome()'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Grass void tick(com.Jeka8833.GenomeTests.world.Cell) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Root Root(com.Jeka8833.GenomeTests.testWorld.TreeLive) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Root Root(com.Jeka8833.GenomeTests.testWorld.TreeLive, int) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Root treeLive'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Root void tick(com.Jeka8833.GenomeTests.world.Cell) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Seed Seed(com.Jeka8833.GenomeTests.testWorld.TreeLive) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Seed Seed(com.Jeka8833.GenomeTests.testWorld.TreeLive, int) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Seed treeLive'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Seed void tick(com.Jeka8833.GenomeTests.world.Cell) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Sheet Sheet(com.Jeka8833.GenomeTests.testWorld.TreeLive) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Sheet Sheet(com.Jeka8833.GenomeTests.testWorld.TreeLive, int) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Sheet void tick(com.Jeka8833.GenomeTests.world.Cell) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.TreeBlock TreeBlock(com.Jeka8833.GenomeTests.testWorld.TreeLive) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.TreeBlock TreeBlock(com.Jeka8833.GenomeTests.testWorld.TreeLive, int) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.TreeBlock TreeBlock(com.Jeka8833.GenomeTests.testWorld.TreeLive, int) 1'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="java.lang.Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.TreeBlock int getStartGen()'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="java.lang.Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.TreeBlock void setStartGen(int) 0'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="java.lang.Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Wood Wood(com.Jeka8833.GenomeTests.testWorld.TreeLive) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Wood Wood(com.Jeka8833.GenomeTests.testWorld.TreeLive, int) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.Wood void tick(com.Jeka8833.GenomeTests.world.Cell) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+</root>

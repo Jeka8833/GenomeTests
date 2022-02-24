@@ -1,0 +1,150 @@
+<root>
+    <item name='com.Jeka8833.GenomeTests.testWorld.FrameManager void cellRender(com.Jeka8833.GenomeTests.world.Cell) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.FrameManager void init(com.Jeka8833.GenomeTests.world.visualize.WorldFrame) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.FrameManager void postRender(com.Jeka8833.GenomeTests.world.visualize.WorldFrame) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.FrameManager void preRender(com.Jeka8833.GenomeTests.world.visualize.WorldFrame) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome Genome(int, int[]) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome chromosomes'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome int createGenome(int) 0'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="1"/>
+            <val name="to" val="java.lang.Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome int crossing(com.Jeka8833.GenomeTests.testWorld.Genome, com.Jeka8833.GenomeTests.testWorld.Genome, int) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome int crossing(com.Jeka8833.GenomeTests.testWorld.Genome, com.Jeka8833.GenomeTests.testWorld.Genome, int) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome int crossing(com.Jeka8833.GenomeTests.testWorld.Genome, com.Jeka8833.GenomeTests.testWorld.Genome, int) 2'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="100"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome int crossing(com.Jeka8833.GenomeTests.testWorld.Genome, float) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome int registerNewGenome(int[]) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome int[] crossing(int[], int[], float)'>
+        <annotation name='org.jetbrains.annotations.Contract'>
+            <val name="value" val="&quot;_, _, _ -&gt; new&quot;"/>
+            <val name="pure" val="true"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome int[] crossing(int[], int[], float) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome int[] crossing(int[], int[], float) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome int[] getChromosomes()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome int[] mutation(int[], float)'>
+        <annotation name='org.jetbrains.annotations.Contract'>
+            <val name="value" val="&quot;_, _ -&gt; new&quot;"/>
+            <val name="pure" val="true"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.Genome int[] mutation(int[], float) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.SimpleWorldGenerator com.Jeka8833.GenomeTests.world.World createWorld()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.SimpleWorldGenerator void create(com.Jeka8833.GenomeTests.world.World) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.SimpleWorldGenerator world'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive boolean checkCondition(int, int, int) 1'>
+        <annotation name='org.intellij.lang.annotations.MagicConstant'>
+            <val name="intValues" val="{PARAM_CONDITION1, PARAM_CONDITION2}"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive boolean checkCondition(int, int, int) 2'>
+        <annotation name='org.intellij.lang.annotations.MagicConstant'>
+            <val name="intValues" val="{PARAM_INVERT_C1, PARAM_INVERT_C2}"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive boolean checkCondition(int, int, int, int) 1'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="PARAM_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive com.Jeka8833.GenomeTests.testWorld.TreeLive newTree(com.Jeka8833.GenomeTests.testWorld.TreeLive)'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+        <annotation name='org.jetbrains.annotations.Contract'>
+            <val val="&quot;_ -&gt; new&quot;"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive com.Jeka8833.GenomeTests.testWorld.TreeLive newTree(com.Jeka8833.GenomeTests.testWorld.TreeLive) 0'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void registerBlock(com.Jeka8833.GenomeTests.world.CellLayers) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void setBlocks(int, com.Jeka8833.GenomeTests.world.Cell) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void setBlocks(int, com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.TreeLive) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void setBlocks(int, com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.TreeLive) 2'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void setBlocks(int, com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.TreeLive, int) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void setBlocks(int, com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.TreeLive, int) 2'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void setBlocks(int, com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.TreeLive, int) 3'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="java.lang.Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void setBlocks(int, com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.TreeLive, int, int) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void setBlocks(int, com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.TreeLive, int, int) 2'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void setBlocks(int, com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.TreeLive, int, int) 3'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="java.lang.Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void setBlocks(int, com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.TreeLive, int, int) 4'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="1"/>
+            <val name="to" val="3"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void useGen(com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.objects.TreeBlock) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void useGen(com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.objects.TreeBlock) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+</root>

@@ -1,0 +1,182 @@
+<root>
+    <item name='com.Jeka8833.GenomeTests.world.Cell Cell(com.Jeka8833.GenomeTests.world.World, int, int) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.Cell Cell(com.Jeka8833.GenomeTests.world.World, int, int) 1'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.Cell Cell(com.Jeka8833.GenomeTests.world.World, int, int) 2'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.Cell T getLayer(java.lang.Class&lt;T&gt;)'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.Cell T getLayer(java.lang.Class&lt;T&gt;) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.Cell layers'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.Cell world'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.Cell x'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.Cell y'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.CellLayers void tick(com.Jeka8833.GenomeTests.world.Cell) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.FileSaver T loadFromFile(java.nio.file.Path, java.lang.Class&lt;T&gt;)'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.FileSaver T loadFromFile(java.nio.file.Path, java.lang.Class&lt;T&gt;) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.FileSaver T loadFromFile(java.nio.file.Path, java.lang.Class&lt;T&gt;) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.FileSaver void saveToFile(java.nio.file.Path, java.lang.Object) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.FileSaver void saveToFile(java.nio.file.Path, java.lang.Object) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World World(int, int, com.Jeka8833.GenomeTests.world.WorldGenerator) 0'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="1"/>
+            <val name="to" val="Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World World(int, int, com.Jeka8833.GenomeTests.world.WorldGenerator) 1'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="1"/>
+            <val name="to" val="Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World World(int, int, com.Jeka8833.GenomeTests.world.WorldGenerator) 2'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World com.Jeka8833.GenomeTests.world.Cell getCell(int, int)'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World com.Jeka8833.GenomeTests.world.Cell getCell(int, int) 0'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World com.Jeka8833.GenomeTests.world.Cell getCell(int, int) 1'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World com.Jeka8833.GenomeTests.world.Cell getShiftedCell(int, int, int, int)'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World com.Jeka8833.GenomeTests.world.Cell getShiftedCell(int, int, int, int) 0'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="java.lang.Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World com.Jeka8833.GenomeTests.world.Cell getShiftedCell(int, int, int, int) 1'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="java.lang.Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World com.Jeka8833.GenomeTests.world.Cell[] getMap()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World com.Jeka8833.GenomeTests.world.WorldGenerator getGenerator()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World generator'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World height'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="1"/>
+            <val name="to" val="java.lang.Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World int getHeight()'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="1"/>
+            <val name="to" val="Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World int getThreadCount()'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="1"/>
+            <val name="to" val="Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World int getWidth()'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="1"/>
+            <val name="to" val="Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World java.lang.String getName()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World map'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World name'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World threadCount'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="1"/>
+            <val name="to" val="Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World threads'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World void setName(java.lang.String) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World void setThreadCount(int) 0'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="1"/>
+            <val name="to" val="Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.World width'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="1"/>
+            <val name="to" val="java.lang.Integer.MAX_VALUE"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.WorldGenerator void create(com.Jeka8833.GenomeTests.world.World) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.WorldTimeManager java.util.List&lt;com.Jeka8833.GenomeTests.world.World&gt; getWorlds()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.WorldTimeManager lockThreads'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.WorldTimeManager void addWorld(com.Jeka8833.GenomeTests.world.World) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+</root>
