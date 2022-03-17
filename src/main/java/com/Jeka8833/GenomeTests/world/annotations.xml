@@ -170,6 +170,12 @@
     <item name='com.Jeka8833.GenomeTests.world.WorldGenerator void create(com.Jeka8833.GenomeTests.world.World) 0'>
         <annotation name='org.jetbrains.annotations.NotNull'/>
     </item>
+    <item name='com.Jeka8833.GenomeTests.world.WorldTimeManager com.Jeka8833.GenomeTests.world.World getWorld(java.lang.String)'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.world.WorldTimeManager com.Jeka8833.GenomeTests.world.World getWorld(java.lang.String) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
     <item name='com.Jeka8833.GenomeTests.world.WorldTimeManager java.util.List&lt;com.Jeka8833.GenomeTests.world.World&gt; getWorlds()'>
         <annotation name='org.jetbrains.annotations.NotNull'/>
     </item>

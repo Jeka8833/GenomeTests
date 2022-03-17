@@ -50,6 +50,12 @@
             <val name="to" val="java.lang.Integer.MAX_VALUE"/>
         </annotation>
     </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.objects.TreeBlock com.Jeka8833.GenomeTests.testWorld.TreeLive getTreeLive()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+        <annotation name='org.jetbrains.annotations.Contract'>
+            <val name="pure" val="true"/>
+        </annotation>
+    </item>
     <item name='com.Jeka8833.GenomeTests.testWorld.objects.TreeBlock int getStartGen()'>
         <annotation name='org.jetbrains.annotations.Range'>
             <val name="from" val="0"/>

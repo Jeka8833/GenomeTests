@@ -31,7 +31,7 @@ public class World implements Serializable {
     private int limitTickPerMinute = 0; // <= 0 is disable
 
     public World(int width, int height, WorldGenerator generator) {
-        if (width < 1 || height < 1) throw new RuntimeException("Width or height < 0");
+        if (width < 1 || height < 1) throw new IllegalArgumentException("Width or height < 0");
 
         this.width = width;
         this.height = height;
@@ -96,7 +96,7 @@ public class World implements Serializable {
     }
 
     public void setThreadCount(int threadCount) {
-        if (threadCount < 1) throw new RuntimeException("Min thread count is 1");
+        if (threadCount < 1) throw new IllegalArgumentException("Min thread count is 1");
 
         threads = threadCount == 1 ? null : Executors.newFixedThreadPool(threadCount - 1);
         this.threadCount = threadCount;
@@ -149,13 +149,10 @@ public class World implements Serializable {
     }
 
     public Cell getShiftedCell(int x, int y, int shiftX, int shiftY) {
-        x += shiftX;
-        if (x > width) x %= width;
-        else if (x < 0) x = width + (x % width);
+        x = (x + shiftX) % width;
+        if (x < 0) x += width;
 
-        int index = x + (y + shiftY) * width;
-        if (index < 0 || index >= map.length) return null;
-        return map[index];
+        return getCell(x, y + shiftY);
     }
 
     private record WorldRunnable(World world, int from, int to, CountDownLatch lock) implements Runnable {

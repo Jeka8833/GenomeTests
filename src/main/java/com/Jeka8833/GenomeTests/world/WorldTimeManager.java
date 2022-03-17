@@ -67,6 +67,13 @@ public class WorldTimeManager implements Serializable {
         return worlds;
     }
 
+    public World getWorld(String name) {
+        for (World world : worlds)
+            if (world.getName().equalsIgnoreCase(name))
+                return world;
+        return null;
+    }
+
     public void addWorld(World world) {
         worlds.add(world);
     }

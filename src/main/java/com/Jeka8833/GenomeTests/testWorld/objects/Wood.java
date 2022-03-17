@@ -11,9 +11,11 @@ public class Wood extends TreeBlock {
 
     @Override
     public void tick(Cell cell) {
-        if (isGrow()){
-            treeLive.useGen(cell, this);
+        if (!isUseGen()) {
+            getTreeLive().useGen(cell, this);
+            setUseGen(true);
         }
-        treeLive.addHeath(-1);
+        getTreeLive().addHeath(-5);
+        if (getTreeLive().isDead()) cell.layers.remove(this);
     }
 }

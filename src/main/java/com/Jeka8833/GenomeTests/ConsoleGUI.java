@@ -99,13 +99,13 @@ public class ConsoleGUI extends javax.swing.JFrame {
         if (evt.getKeyCode() == 10) {
             String[] args = consoleInputUI.getText().split(" ");
             if (args.length == 0) return;
-
+            addLog("Command: " + consoleInputUI.getText());
             String command = args[0].toLowerCase();
 
             switch (command) {
                 case "start":
                     if (timeManager.isRun()) {
-                        addLog("Error: world already started");
+                        addLog("Error: worlds already started");
                     } else {
                         timeManager.start();
                         addLog("Success");
@@ -116,7 +116,7 @@ public class ConsoleGUI extends javax.swing.JFrame {
                         timeManager.stop();
                         addLog("Success");
                     } else {
-                        addLog("Error: world already stopped");
+                        addLog("Error: worlds already stopped");
                     }
                     break;
                 case "save":
@@ -142,6 +142,34 @@ public class ConsoleGUI extends javax.swing.JFrame {
                         for (World world : timeManager.getWorlds()) {
                             addLog("- " + world.getName() + " " + world.getWidth() + "x" + world.getHeight());
                         }
+                    }
+                    break;
+                case "speed":
+                    try {
+                        World world = timeManager.getWorld(args[1]);
+                        if (world == null) {
+                            addLog("World not found");
+                        } else {
+                            world.setLimitTickPerMinute(Integer.parseInt(args[2]));
+                            addLog("Set tick limit: " + world.getLimitTickPerMinute());
+                        }
+                    } catch (Exception e) {
+                        addLog("Fail set speed: " + e);
+
+                    }
+                    break;
+                case "tick":
+                    try {
+                        World world = timeManager.getWorld(args[1]);
+                        if (world == null) {
+                            addLog("World not found");
+                        } else {
+                            world.tick();
+                            addLog("World ticked");
+                        }
+                    } catch (Exception e) {
+                        addLog("Fail set speed: " + e);
+
                     }
                     break;
                 default:

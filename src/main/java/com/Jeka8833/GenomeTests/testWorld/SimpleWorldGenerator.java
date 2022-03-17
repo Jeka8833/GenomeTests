@@ -9,7 +9,6 @@ import com.Jeka8833.GenomeTests.world.CellLayers;
 import com.Jeka8833.GenomeTests.world.World;
 import com.Jeka8833.GenomeTests.world.WorldGenerator;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class SimpleWorldGenerator extends WorldGenerator {
@@ -17,8 +16,8 @@ public class SimpleWorldGenerator extends WorldGenerator {
     private static final int WORLD_WIDTH = 3000;
     private static final int WORLD_HEIGHT = 100;
 
-    private static final int GROUND_LEVEL = 30;
-    private static final int START_POPULATION = 1500;
+    public static final int GROUND_LEVEL = 30;
+    private static final int START_POPULATION = 1;
 
     private World world;
 
@@ -46,31 +45,31 @@ public class SimpleWorldGenerator extends WorldGenerator {
 
     @Override
     public void pastTick() {
-        Iterator<TreeLive> treeLiveIterator = TreeLive.treeList.iterator();
-        while (treeLiveIterator.hasNext()) {
-            TreeLive tree = treeLiveIterator.next();
-            if (!tree.isDead()) continue;
-
-            tree.getTreeBlocks().removeIf(layers -> !(layers instanceof Seed));
-            treeLiveIterator.remove();
-        }
+        int maxSunLevel = 16;
 
         Cell[] worldCells = world.getMap();
-        int maxSunLevel = 16;
         for (int x = 0; x < WORLD_WIDTH; x++) {
             int level = maxSunLevel;
-            for (int y = 0; y < GROUND_LEVEL; y++) {
-                if (level <= 0) break;
-
+            for (int y = 0; y < WORLD_HEIGHT; y++) {
                 List<CellLayers> layers = worldCells[x + y * WORLD_WIDTH].layers;
-                if (layers.isEmpty()) continue;
+                int size = layers.size();
+                if (size == 0) continue;
 
-                for (CellLayers layer : layers) {
-                    if (layer instanceof Wood) {
-                        level -= 8;
-                    } else if (layer instanceof Sheet sheet) {
-                        sheet.treeLive.addHeath(level);
-                        level -= 5;
+                for (int i = size - 1; i >= 0; i--) {
+                    CellLayers cellLayers = layers.get(i);
+                    if (cellLayers instanceof Wood wood) {
+                        if (!wood.getTreeLive().isDead()) {
+                            level -= 8;
+                        }
+                    } else if (cellLayers instanceof Sheet sheet) {
+                        if (!sheet.getTreeLive().isDead()) {
+                            if (level > 0) sheet.getTreeLive().addHeath(level);
+                            level -= 5;
+                        }
+                    } else if (cellLayers instanceof Seed sheet) {
+                        if (!sheet.getTreeLive().isDead()) {
+                            level -= 3;
+                        }
                     }
                 }
             }

@@ -1,14 +1,19 @@
 package com.Jeka8833.GenomeTests.testWorld;
 
-import com.Jeka8833.GenomeTests.testWorld.objects.*;
+import com.Jeka8833.GenomeTests.testWorld.objects.Grass;
+import com.Jeka8833.GenomeTests.testWorld.objects.Seed;
+import com.Jeka8833.GenomeTests.testWorld.objects.Sheet;
+import com.Jeka8833.GenomeTests.testWorld.objects.Wood;
 import com.Jeka8833.GenomeTests.world.Cell;
 import com.Jeka8833.GenomeTests.world.CellLayers;
 import com.Jeka8833.GenomeTests.world.visualize.FormLayerManager;
 import com.Jeka8833.GenomeTests.world.visualize.WorldFrame;
 import org.lwjgl.BufferUtils;
 
+import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
 import static org.lwjgl.opengl.GL11.glEnableClientState;
 import static org.lwjgl.opengl.GL15.*;
@@ -20,8 +25,18 @@ public class FrameManager implements FormLayerManager {
 
     private int vbo_vertex_handle;
 
+    private boolean click = false;
+
+    private Cell selectedCell = null;
+
     @Override
     public void init(WorldFrame worldFrame) {
+        glfwSetMouseButtonCallback(worldFrame.window, (windowHnd, button, action, mods) -> {
+            if (action == GLFW_RELEASE && button == GLFW_MOUSE_BUTTON_1) {
+                click = true;
+            }
+        });
+
         FloatBuffer vertex_data = BufferUtils.createFloatBuffer(vertices * vertex_size);
         vertex_data.put(new float[]{0, 0});
         vertex_data.put(new float[]{1, 0});
@@ -67,7 +82,21 @@ public class FrameManager implements FormLayerManager {
 
     @Override
     public void postRender(WorldFrame worldFrame) {
+        if (click) {
+            click = false;
+            DoubleBuffer xBuffer = BufferUtils.createDoubleBuffer(1);
+            DoubleBuffer yBuffer = BufferUtils.createDoubleBuffer(1);
+            glfwGetCursorPos(worldFrame.window, xBuffer, yBuffer);
+            float zoomWidth = worldFrame.aspect >= 1.0 ? worldFrame.zoom * worldFrame.aspect : worldFrame.zoom;
+            float zoomHeight = worldFrame.aspect >= 1.0 ? worldFrame.zoom : worldFrame.zoom * worldFrame.aspect;
+            int x = (int) (worldFrame.pos.x + (xBuffer.get(0) * zoomWidth) / worldFrame.width);
+            int y = (int) (worldFrame.pos.y + ((worldFrame.height - yBuffer.get(0)) * zoomHeight) / worldFrame.height);
+            selectedCell = worldFrame.getWorld().getCell(x, y);
+        }
 
+        if (selectedCell != null) {
+
+        }
     }
 
     @Override

@@ -5,26 +5,17 @@ import com.Jeka8833.GenomeTests.world.CellLayers;
 
 public abstract class TreeBlock implements CellLayers {
 
-    public final TreeLive treeLive;
-    private boolean isGrow = true;
-    private int startGen = 0;
+    private final TreeLive treeLive;
+    private int startGen;
+    private boolean useGen;
 
     public TreeBlock(TreeLive treeLive, int startGen) {
         this.startGen = startGen;
         this.treeLive = treeLive;
-        treeLive.registerBlock(this);
     }
 
     public TreeLive getTreeLive() {
         return treeLive;
-    }
-
-    public boolean isGrow() {
-        return isGrow;
-    }
-
-    public void setGrow(boolean grow) {
-        isGrow = grow;
     }
 
     public int getStartGen() {
@@ -33,5 +24,13 @@ public abstract class TreeBlock implements CellLayers {
 
     public void setStartGen(int startGen) {
         this.startGen = startGen;
+    }
+
+    public boolean isUseGen() {
+        return useGen;
+    }
+
+    public void setUseGen(boolean useGen) {
+        this.useGen = useGen;
     }
 }

@@ -138,7 +138,7 @@
     <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void setBlocks(int, com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.TreeLive, int, int) 4'>
         <annotation name='org.jetbrains.annotations.Range'>
             <val name="from" val="1"/>
-            <val name="to" val="3"/>
+            <val name="to" val="4"/>
         </annotation>
     </item>
     <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void useGen(com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.objects.TreeBlock) 0'>
@@ -146,5 +146,38 @@
     </item>
     <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive void useGen(com.Jeka8833.GenomeTests.world.Cell, com.Jeka8833.GenomeTests.testWorld.objects.TreeBlock) 1'>
         <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive.Block Block(com.Jeka8833.GenomeTests.world.Cell, int, int, int) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive.Block cell'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive.Block com.Jeka8833.GenomeTests.testWorld.TreeLive.Block createBlock(com.Jeka8833.GenomeTests.world.Cell, int)'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive.Block com.Jeka8833.GenomeTests.testWorld.TreeLive.Block createBlock(com.Jeka8833.GenomeTests.world.Cell, int) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive.Block com.Jeka8833.GenomeTests.testWorld.TreeLive.Block createBlock(com.Jeka8833.GenomeTests.world.Cell, int, int)'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive.Block com.Jeka8833.GenomeTests.testWorld.TreeLive.Block createBlock(com.Jeka8833.GenomeTests.world.Cell, int, int) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive.Block com.Jeka8833.GenomeTests.world.Cell getCell()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+        <annotation name='org.jetbrains.annotations.Contract'>
+            <val name="pure" val="true"/>
+        </annotation>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive.Block int useBlock(com.Jeka8833.GenomeTests.testWorld.TreeLive, int) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.testWorld.TreeLive.Block int useBlock(com.Jeka8833.GenomeTests.testWorld.TreeLive, int) 1'>
+        <annotation name='org.jetbrains.annotations.Range'>
+            <val name="from" val="0"/>
+            <val name="to" val="java.lang.Integer.MAX_VALUE"/>
+        </annotation>
     </item>
 </root>

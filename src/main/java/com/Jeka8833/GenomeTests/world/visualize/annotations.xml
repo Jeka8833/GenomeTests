@@ -17,6 +17,9 @@
     <item name='com.Jeka8833.GenomeTests.world.visualize.WorldFrame WorldFrame(com.Jeka8833.GenomeTests.world.World, com.Jeka8833.GenomeTests.world.visualize.FormLayerManager) 1'>
         <annotation name='org.jetbrains.annotations.Nullable'/>
     </item>
+    <item name='com.Jeka8833.GenomeTests.world.visualize.WorldFrame com.Jeka8833.GenomeTests.world.World getWorld()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
     <item name='com.Jeka8833.GenomeTests.world.visualize.WorldFrame com.Jeka8833.GenomeTests.world.visualize.WorldFrame createWindow(com.Jeka8833.GenomeTests.world.World, com.Jeka8833.GenomeTests.world.visualize.FormLayerManager)'>
         <annotation name='org.jetbrains.annotations.Contract'>
             <val val="&quot;_, _ -&gt; new&quot;"/>

@@ -9,8 +9,6 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.stb.STBEasyFont;
 
 import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
-import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -22,21 +20,21 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class WorldFrame implements Runnable {
 
     private final World world;
-    private FormLayerManager layerManager;
 
+    private FormLayerManager layerManager;
     public final Vector2f pos = new Vector2f();
+
     public float zoom = 10;
     private boolean leftPress = false;
     private boolean rightPress = false;
     private boolean upPress = false;
     private boolean downPress = false;
-
     public long window;
+
     private double lastTime = 0;
     public int width = 300;
     public int height = 300;
     public float aspect = 1;
-
     public WorldFrame(World world) {
         this(world, null);
     }
@@ -178,6 +176,10 @@ public class WorldFrame implements Runnable {
 
     public void setLayerManager(FormLayerManager layerManager) {
         this.layerManager = layerManager;
+    }
+
+    public World getWorld() {
+        return world;
     }
 
     public static void init() {

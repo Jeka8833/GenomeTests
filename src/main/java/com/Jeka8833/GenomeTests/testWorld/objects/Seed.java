@@ -1,5 +1,6 @@
 package com.Jeka8833.GenomeTests.testWorld.objects;
 
+import com.Jeka8833.GenomeTests.testWorld.SimpleWorldGenerator;
 import com.Jeka8833.GenomeTests.testWorld.TreeLive;
 import com.Jeka8833.GenomeTests.world.Cell;
 
@@ -10,24 +11,23 @@ public class Seed extends TreeBlock {
 
     @Override
     public void tick(Cell cell) {
-        if (treeLive.isDead()) {
+        if (!isUseGen()) {
+            getTreeLive().useGen(cell, this);
+            setUseGen(true);
+        }
+
+        if (getTreeLive().isDead()) {
             cell.layers.remove(this);
-            Cell downCell = cell.world.getCell(cell.x, cell.y + 1);
-            if (downCell != null) {
-                if (downCell.layers.isEmpty()) {
-                    downCell.layers.add(this);
-                } else if (downCell.getLayer(Grass.class) != null) {
-                    downCell.layers.add(new Seed(TreeLive.newTree(treeLive), 0));
-                }
-            }
-        } else {
-            if (treeLive.getTreeBlocks().size() == 1) {
-                if (isGrow()) {
-                    treeLive.useGen(cell, this);
-                    cell.layers.remove(this);
+            Cell nextCell = cell.world.getShiftedCell(cell.x, cell.y,
+                    0, (int) Math.signum((SimpleWorldGenerator.GROUND_LEVEL - 1) - cell.y));
+            if (nextCell != null) {
+                if (nextCell.layers.isEmpty()) {
+                    nextCell.layers.add(this);
+                } else if (nextCell.getLayer(Grass.class) != null) {
+                    nextCell.layers.add(new Seed(TreeLive.newTree(getTreeLive()), 0));
                 }
             }
         }
-        treeLive.addHeath(-1);
+        getTreeLive().addHeath(-10);
     }
 }
