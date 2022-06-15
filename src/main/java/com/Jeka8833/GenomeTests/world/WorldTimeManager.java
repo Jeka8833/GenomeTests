@@ -25,8 +25,10 @@ public class WorldTimeManager implements Serializable {
         if (run || worlds.isEmpty()) return;
         run = true;
 
-        lockThreads = new CyclicBarrier(worlds.size());
-        for (final World world : worlds) {
+        World[] worldList = worlds.stream().filter(world -> !world.isSkipSimulation()).toArray(World[]::new);
+
+        lockThreads = new CyclicBarrier(worldList.length);
+        for (final World world : worldList) {
             THREAD_POOL.execute(() -> {
                 while (run) {
                     try {
@@ -67,14 +69,21 @@ public class WorldTimeManager implements Serializable {
         return worlds;
     }
 
-    public World getWorld(String name) {
-        for (World world : worlds)
-            if (world.getName().equalsIgnoreCase(name))
-                return world;
-        return null;
+    public boolean isWorld(String name) {
+        return worlds.stream().anyMatch(world -> world.getName().equalsIgnoreCase(name));
     }
 
-    public void addWorld(World world) {
-        worlds.add(world);
+    public World getWorld(String name) {
+        return worlds.stream().filter(world -> world.getName().equalsIgnoreCase(name))
+                .findAny().orElse(null);
+    }
+
+    public boolean addWorld(World world) {
+        if (isWorld(world.getName())) return false;
+        return worlds.add(world);
+    }
+
+    public boolean removeWorld(String name) {
+        return worlds.removeIf(world -> world.getName().equalsIgnoreCase(name));
     }
 }

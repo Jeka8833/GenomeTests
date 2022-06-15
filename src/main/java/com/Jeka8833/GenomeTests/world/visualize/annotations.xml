@@ -1,4 +1,7 @@
 <root>
+    <item name='com.Jeka8833.GenomeTests.world.visualize.FormLayerManager void cellRender(com.Jeka8833.GenomeTests.world.Cell) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
     <item name='com.Jeka8833.GenomeTests.world.visualize.FormLayerManager void init(com.Jeka8833.GenomeTests.world.visualize.WorldFrame) 0'>
         <annotation name='org.jetbrains.annotations.NotNull'/>
     </item>

@@ -2,21 +2,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.Jeka8833.GenomeTests;
+package com.Jeka8833.GenomeTests.console;
 
-import com.Jeka8833.GenomeTests.world.FileSaver;
+import com.Jeka8833.GenomeTests.console.console.Command;
 import com.Jeka8833.GenomeTests.world.World;
 import com.Jeka8833.GenomeTests.world.WorldTimeManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.io.IOException;
-import java.nio.file.Path;
 
 /**
  * @author Jeka8833
  */
 public class ConsoleGUI extends javax.swing.JFrame {
+    private static final Logger LOGGER = LogManager.getLogger(ConsoleGUI.class);
 
     private WorldTimeManager timeManager;
 
@@ -41,6 +42,7 @@ public class ConsoleGUI extends javax.swing.JFrame {
 
         logPaneUI.setEditable(false);
         logPaneUI.setColumns(20);
+        logPaneUI.setFont(logPaneUI.getFont().deriveFont(12f));
         logPaneUI.setRows(5);
         jScrollPane1.setViewportView(logPaneUI);
 
@@ -97,86 +99,36 @@ public class ConsoleGUI extends javax.swing.JFrame {
 
     private void consoleInputUIKeyPressed(java.awt.event.@NotNull KeyEvent evt) {//GEN-FIRST:event_consoleInputUIKeyPressed
         if (evt.getKeyCode() == 10) {
-            String[] args = consoleInputUI.getText().split(" ");
+            String inputText = consoleInputUI.getText();
+
+            String[] args = inputText.split(" ", 2);
             if (args.length == 0) return;
-            addLog("Command: " + consoleInputUI.getText());
-            String command = args[0].toLowerCase();
 
-            switch (command) {
-                case "start":
-                    if (timeManager.isRun()) {
-                        addLog("Error: worlds already started");
-                    } else {
-                        timeManager.start();
-                        addLog("Success");
-                    }
-                    break;
-                case "stop":
-                    if (timeManager.isRun()) {
-                        timeManager.stop();
-                        addLog("Success");
-                    } else {
-                        addLog("Error: worlds already stopped");
-                    }
-                    break;
-                case "save":
+            addLog("> " + inputText);
+
+            for (Command command : Command.COMMANDS) {
+                if (command.prefix().equalsIgnoreCase(args[0])) {
+                    String argument = args.length >= 2 ? args[1] : null;
                     try {
-                        FileSaver.saveToFile(Path.of("", "saves", System.currentTimeMillis() + ""), timeManager);
-                        addLog("Success");
-                    } catch (IOException e) {
-                        addLog("Error save worlds: " + e);
-                    }
-                    break;
-                case "load":
-                    try {
-                        setTimeManager(FileSaver.loadFromFile(Path.of(args[1]), WorldTimeManager.class));
-                    } catch (IOException | ClassNotFoundException e) {
-                        addLog("Error load worlds: " + e);
-                    }
-                    break;
-                case "list":
-                    if (timeManager.getWorlds().isEmpty()) {
-                        addLog("Worlds not found");
-                    } else {
-                        addLog("Worlds:");
-                        for (World world : timeManager.getWorlds()) {
-                            addLog("- " + world.getName() + " " + world.getWidth() + "x" + world.getHeight());
-                        }
-                    }
-                    break;
-                case "speed":
-                    try {
-                        World world = timeManager.getWorld(args[1]);
-                        if (world == null) {
-                            addLog("World not found");
+                        if (argument != null && (argument.equalsIgnoreCase("-help") ||
+                                argument.equalsIgnoreCase("-h"))) {
+                            addLog(command.help());
                         } else {
-                            world.setLimitTickPerMinute(Integer.parseInt(args[2]));
-                            addLog("Set tick limit: " + world.getLimitTickPerMinute());
+                            command.execute(argument, timeManager);
                         }
+                        consoleInputUI.setText("");
                     } catch (Exception e) {
-                        addLog("Fail set speed: " + e);
-
-                    }
-                    break;
-                case "tick":
-                    try {
-                        World world = timeManager.getWorld(args[1]);
-                        if (world == null) {
-                            addLog("World not found");
+                        if (e.getMessage() == null || e.getMessage().isEmpty()) {
+                            addLog("Incorrect parameters");
+                            addLog(command.help());
                         } else {
-                            world.tick();
-                            addLog("World ticked");
+                            addLog("Fail run > " + e.getMessage());
                         }
-                    } catch (Exception e) {
-                        addLog("Fail set speed: " + e);
-
                     }
-                    break;
-                default:
-                    addLog("Error command: " + command);
+                    return;
+                }
             }
-
-            consoleInputUI.setText("");
+            addLog("Unknown command");
         }
     }//GEN-LAST:event_consoleInputUIKeyPressed
 
@@ -185,7 +137,8 @@ public class ConsoleGUI extends javax.swing.JFrame {
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ConsoleGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
@@ -207,6 +160,8 @@ public class ConsoleGUI extends javax.swing.JFrame {
             }
         });
         timer.start();
+
+        ConsoleHook.addListener((text) -> console.logPaneUI.append(text));
 
         java.awt.EventQueue.invokeLater(() -> {
             console.initComponents();

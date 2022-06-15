@@ -51,6 +51,7 @@ public class World implements Serializable {
         if (limitTickPerMinute > 0) {
             long delayTime = (((tickCount - lastTickCount + 1) * 60_000L) / limitTickPerMinute) -
                     (timeForSamples - (timeToNextTick - time));
+
             if (delayTime > 0) Thread.sleep(delayTime);
         }
         if (time > timeToNextTick) {
