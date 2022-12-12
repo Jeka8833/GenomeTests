@@ -38,7 +38,6 @@ public class Genome implements Serializable {
     }
 
 
-
     public static int generateIndex() {
         return INDEX_GENERATOR.incrementAndGet();
     }

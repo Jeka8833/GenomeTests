@@ -64,6 +64,23 @@ public class World implements Serializable {
         generator.preTick();
 
         if (threads == null) {
+            new WorldUpdateLayers(this, 0, map.length, null).run();
+        } else {
+            var lock = new CountDownLatch(threadCount);
+            for (int i = 0; i < threadCount; i++) {
+                int fromPos = (i * map.length) / threadCount;
+                int toPos = ((i + 1) * map.length) / threadCount;
+                var worldWorker = new WorldUpdateLayers(this, fromPos, toPos, lock);
+
+                if (i >= threadCount - 1) // Check last iteration
+                    worldWorker.run();
+                else threads.execute(worldWorker);
+            }
+
+            lock.await(); // Wait to the end working all threads
+        }
+
+        if (threads == null) {
             new WorldRunnable(this, 0, map.length, null).run();
         } else {
             var lock = new CountDownLatch(threadCount);
@@ -97,9 +114,7 @@ public class World implements Serializable {
     }
 
     public void setThreadCount(int threadCount) {
-        if (threadCount < 1) throw new IllegalArgumentException("Min thread count is 1");
-
-        threads = threadCount == 1 ? null : Executors.newFixedThreadPool(threadCount - 1);
+        threads = threadCount <= 1 ? null : Executors.newFixedThreadPool(threadCount - 1);
         this.threadCount = threadCount;
     }
 
@@ -160,11 +175,19 @@ public class World implements Serializable {
         @Override
         public void run() {
             try {
-                for (int i = from; i < to; i++)
-                    world.map[i].tick();
+                for (int i = from; i < to; i++) world.map[i].tick();
             } catch (Exception e) {
                 LOGGER.error("Block from: " + from + " to " + to + " has error:", e);
             }
+            if (lock != null) lock.countDown();
+        }
+    }
+
+    private record WorldUpdateLayers(World world, int from, int to, CountDownLatch lock) implements Runnable {
+        @Override
+        public void run() {
+            for (int i = from; i < to; i++) world.map[i].updateLayers();
+
             if (lock != null) lock.countDown();
         }
     }

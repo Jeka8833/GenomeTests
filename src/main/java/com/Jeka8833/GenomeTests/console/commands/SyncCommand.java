@@ -22,12 +22,12 @@ public class SyncCommand implements Command {
     }
 
     @Override
-    public String prefix() {
+    public String key() {
         return "sync";
     }
 
     @Override
-    public String help() {
+    public String description() {
         return "sync <true | false> - Enable or disable synchronization";
     }
 }

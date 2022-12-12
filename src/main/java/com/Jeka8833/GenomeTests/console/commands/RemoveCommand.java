@@ -23,12 +23,12 @@ public class RemoveCommand implements Command {
     }
 
     @Override
-    public String prefix() {
+    public String key() {
         return "remove";
     }
 
     @Override
-    public String help() {
+    public String description() {
         return "remove <World Name : String> - remove world";
     }
 }

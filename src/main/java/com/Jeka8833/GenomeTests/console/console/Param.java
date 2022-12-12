@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ParamAnnotation {
+public @interface Param {
     String description() default "";
 
     String defaultValue() default "";

@@ -102,7 +102,7 @@ public class TreeLive implements Serializable {
     }
 
     public void useGen(Cell cell, TreeBlock treeBlock) {
-        int gen = getGenome().getChromosomes()[treeBlock.getStartGen()];
+        int gen = getGenome().getChromosomes()[0];
 
         boolean condition1 = checkCondition(gen, cell.y, PARAM_CONDITION1, PARAM_INVERT_C1);
         boolean condition2 = checkCondition(
@@ -132,7 +132,7 @@ public class TreeLive implements Serializable {
             if (jumpIndex < treeBlock.getTreeLive().getGenome().getChromosomes().length)
                 treeBlock.setStartGen(jumpIndex);
         }
-        if (activateCreate) setBlocks(gen, cell, this, treeBlock.getStartGen(), 4);
+        if (activateCreate) setBlocks(gen, cell, this, treeBlock.getStartGen(), 2);
     }
 
     public static TreeLive newTree(TreeLive parents) {

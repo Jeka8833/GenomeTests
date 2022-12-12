@@ -39,12 +39,12 @@ public class SaveCommand implements Command {
     }
 
     @Override
-    public String prefix() {
+    public String key() {
         return "save";
     }
 
     @Override
-    public String help() {
+    public String description() {
         return "save <World Name (parameter 'all' to select all worlds) : String> <Path to save : String>" +
                 " - save world(s) to file";
     }

@@ -4,10 +4,8 @@ import com.Jeka8833.GenomeTests.testWorld.objects.Grass;
 import com.Jeka8833.GenomeTests.testWorld.objects.Seed;
 import com.Jeka8833.GenomeTests.testWorld.objects.Sheet;
 import com.Jeka8833.GenomeTests.testWorld.objects.Wood;
-import com.Jeka8833.GenomeTests.world.Cell;
-import com.Jeka8833.GenomeTests.world.CellLayers;
-import com.Jeka8833.GenomeTests.world.World;
-import com.Jeka8833.GenomeTests.world.WorldGenerator;
+import com.Jeka8833.GenomeTests.world.*;
+import com.Jeka8833.GenomeTests.world.visualize.WorldFrame;
 
 import java.util.List;
 
@@ -17,9 +15,15 @@ public class SimpleWorldGenerator extends WorldGenerator {
     private static final int WORLD_HEIGHT = 100;
 
     public static final int GROUND_LEVEL = 30;
-    private static final int START_POPULATION = 1;
+    private static final int START_POPULATION = 100;
 
     private World world;
+
+    private final WorldTimeManager timeManager;
+
+    public SimpleWorldGenerator(WorldTimeManager timeManager) {
+        this.timeManager = timeManager;
+    }
 
     @Override
     public void create(World world) {
@@ -40,12 +44,22 @@ public class SimpleWorldGenerator extends WorldGenerator {
 
     @Override
     public void preTick() {
-
+        boolean allDead = true;
+        Cell[] worldCells = world.getMap();
+        for (Cell cell : worldCells) {
+            if (cell.getLayer(Wood.class) != null || cell.getLayer(Seed.class) != null) {
+                allDead = false;
+                break;
+            }
+        }
+        if (allDead) {
+            restart(timeManager, world);
+        }
     }
 
     @Override
     public void pastTick() {
-        int maxSunLevel = 16;
+        int maxSunLevel = 25;
 
         Cell[] worldCells = world.getMap();
         for (int x = 0; x < WORLD_WIDTH; x++) {
@@ -63,7 +77,7 @@ public class SimpleWorldGenerator extends WorldGenerator {
                         }
                     } else if (cellLayers instanceof Sheet sheet) {
                         if (!sheet.getTreeLive().isDead()) {
-                            if (level > 0) sheet.getTreeLive().addHeath(level);
+                            if (level > 0) sheet.getTreeLive().addHeath(Math.min(40, level));
                             level -= 5;
                         }
                     } else if (cellLayers instanceof Seed sheet) {
@@ -76,11 +90,36 @@ public class SimpleWorldGenerator extends WorldGenerator {
         }
     }
 
-    public static World createWorld() {
-        var world = new World(WORLD_WIDTH, WORLD_HEIGHT, new SimpleWorldGenerator());
-        world.setName("TestWorld1");
-        world.setThreadCount(12);
-        return world;
+    private static WorldFrame window = null;
+    private static Thread restartThread = null;
+
+    public static void restart(WorldTimeManager timeManager, World world) {
+        if (restartThread == null || !restartThread.isAlive()) {
+            restartThread = new Thread(() -> {
+                timeManager.stopAndAwait();
+                SimpleWorldGenerator.close(timeManager, world);
+                SimpleWorldGenerator.createWorld(timeManager,
+                        Integer.parseInt(world.getName().split("-")[1]) + 1);
+                timeManager.start();
+            });
+            restartThread.setDaemon(true);
+            restartThread.setPriority(Thread.MIN_PRIORITY);
+            restartThread.start();
+        }
     }
 
+    public static void createWorld(WorldTimeManager timeManager, int number) {
+        var world = new World(WORLD_WIDTH, WORLD_HEIGHT, new SimpleWorldGenerator(timeManager));
+        world.setName("TestWorld-" + number);
+        world.setThreadCount(4);
+        world.setLimitTickPerMinute(0);
+        window = WorldFrame.createWindow(world, new FrameManager());
+        timeManager.addWorld(world);
+    }
+
+    public static void close(WorldTimeManager timeManager, World world) {
+        timeManager.removeWorld(world.getName());
+        if (window != null)
+            window.destroyFrame();
+    }
 }

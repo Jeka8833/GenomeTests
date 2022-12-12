@@ -1,4 +1,148 @@
 <root>
+    <item name='com.Jeka8833.GenomeTests.console.commands.HelpCommand java.lang.String description()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.HelpCommand java.lang.String key()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.HelpCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.HelpCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.ListCommand java.lang.String description()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.ListCommand java.lang.String key()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.ListCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.ListCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.LoadCommand java.lang.String description()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.LoadCommand java.lang.String key()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.LoadCommand void addWorld(com.Jeka8833.GenomeTests.world.WorldTimeManager, com.Jeka8833.GenomeTests.world.World) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.LoadCommand void addWorld(com.Jeka8833.GenomeTests.world.WorldTimeManager, com.Jeka8833.GenomeTests.world.World) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.LoadCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.LoadCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.RemoveCommand java.lang.String description()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.RemoveCommand java.lang.String key()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.RemoveCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.RemoveCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.SaveCommand java.lang.String description()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.SaveCommand java.lang.String key()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.SaveCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.SaveCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.SpeedCommand java.lang.String description()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.SpeedCommand java.lang.String key()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.SpeedCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.SpeedCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.StartCommand java.lang.String description()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.StartCommand java.lang.String key()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.StartCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.StartCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.StopCommand java.lang.String description()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.StopCommand java.lang.String key()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.StopCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.StopCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.SyncCommand java.lang.String description()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.SyncCommand java.lang.String key()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.SyncCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.SyncCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.TickCommand java.lang.String description()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.TickCommand java.lang.String key()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.TickCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.TickCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.ViewCommand com.Jeka8833.GenomeTests.world.visualize.FormLayerManager getPalette(java.lang.String)'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.ViewCommand com.Jeka8833.GenomeTests.world.visualize.FormLayerManager getPalette(java.lang.String) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.ViewCommand java.lang.String description()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.ViewCommand java.lang.String key()'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.ViewCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+    <item name='com.Jeka8833.GenomeTests.console.commands.ViewCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
     <item name='com.Jeka8833.GenomeTests.console.console.Command java.lang.String help()'>
         <annotation name='org.jetbrains.annotations.NotNull'/>
     </item>
@@ -19,160 +163,16 @@
     <item name='com.Jeka8833.GenomeTests.console.console.FieldManager void registerCommand(java.lang.Class&lt;? extends com.Jeka8833.GenomeTests.console.commands.Command&gt;) 0'>
         <annotation name='org.jetbrains.annotations.NotNull'/>
     </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.HelpCommand java.lang.String help()'>
+    <item name='com.Jeka8833.GenomeTests.console.console.commands.TestCommand java.lang.String help()'>
         <annotation name='org.jetbrains.annotations.NotNull'/>
     </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.HelpCommand java.lang.String prefix()'>
+    <item name='com.Jeka8833.GenomeTests.console.console.commands.TestCommand java.lang.String prefix()'>
         <annotation name='org.jetbrains.annotations.NotNull'/>
     </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.HelpCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
+    <item name='com.Jeka8833.GenomeTests.console.console.commands.TestCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
         <annotation name='org.jetbrains.annotations.Nullable'/>
     </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.HelpCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.ListCommand java.lang.String help()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.ListCommand java.lang.String prefix()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.ListCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
-        <annotation name='org.jetbrains.annotations.Nullable'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.ListCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.LoadCommand java.lang.String help()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.LoadCommand java.lang.String prefix()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.LoadCommand void addWorld(com.Jeka8833.GenomeTests.world.WorldTimeManager, com.Jeka8833.GenomeTests.world.World) 0'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.LoadCommand void addWorld(com.Jeka8833.GenomeTests.world.WorldTimeManager, com.Jeka8833.GenomeTests.world.World) 1'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.LoadCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
-        <annotation name='org.jetbrains.annotations.Nullable'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.LoadCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.RemoveCommand java.lang.String help()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.RemoveCommand java.lang.String prefix()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.RemoveCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
-        <annotation name='org.jetbrains.annotations.Nullable'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.RemoveCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.SaveCommand java.lang.String help()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.SaveCommand java.lang.String prefix()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.SaveCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
-        <annotation name='org.jetbrains.annotations.Nullable'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.SaveCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.SpeedCommand java.lang.String help()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.SpeedCommand java.lang.String prefix()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.SpeedCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
-        <annotation name='org.jetbrains.annotations.Nullable'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.SpeedCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.StartCommand java.lang.String help()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.StartCommand java.lang.String prefix()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.StartCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
-        <annotation name='org.jetbrains.annotations.Nullable'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.StartCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.StopCommand java.lang.String help()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.StopCommand java.lang.String prefix()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.StopCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
-        <annotation name='org.jetbrains.annotations.Nullable'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.StopCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.SyncCommand java.lang.String help()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.SyncCommand java.lang.String prefix()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.SyncCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
-        <annotation name='org.jetbrains.annotations.Nullable'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.SyncCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.console.TestCommand java.lang.String help()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.console.TestCommand java.lang.String prefix()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.console.TestCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
-        <annotation name='org.jetbrains.annotations.Nullable'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.console.TestCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.TickCommand java.lang.String help()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.TickCommand java.lang.String prefix()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.TickCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
-        <annotation name='org.jetbrains.annotations.Nullable'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.TickCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.ViewCommand com.Jeka8833.GenomeTests.world.visualize.FormLayerManager getPalette(java.lang.String)'>
-        <annotation name='org.jetbrains.annotations.Nullable'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.ViewCommand com.Jeka8833.GenomeTests.world.visualize.FormLayerManager getPalette(java.lang.String) 0'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.ViewCommand java.lang.String help()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.ViewCommand java.lang.String prefix()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.ViewCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 0'>
-        <annotation name='org.jetbrains.annotations.Nullable'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.commands.ViewCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
+    <item name='com.Jeka8833.GenomeTests.console.console.commands.TestCommand void execute(java.lang.String, com.Jeka8833.GenomeTests.world.WorldTimeManager) 1'>
         <annotation name='org.jetbrains.annotations.NotNull'/>
     </item>
 </root>

@@ -48,12 +48,12 @@ public class LoadCommand implements Command {
     }
 
     @Override
-    public String prefix() {
+    public String key() {
         return "load";
     }
 
     @Override
-    public String help() {
+    public String description() {
         return "load <Path to file : String> - load world(s) from file";
     }
 }

@@ -64,12 +64,12 @@ public class ViewCommand implements Command {
     }
 
     @Override
-    public String prefix() {
+    public String key() {
         return "view";
     }
 
     @Override
-    public String help() {
+    public String description() {
         return "view <World Name (parameter 'all' to select all worlds) : String> " +
                 "<Palette (Default palette is 'FrameManager') : String> - open simulation window";
     }

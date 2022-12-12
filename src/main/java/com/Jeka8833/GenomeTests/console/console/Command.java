@@ -11,7 +11,7 @@ public interface Command {
 
     void execute(String command, WorldTimeManager worldTimeManager) throws Exception;
 
-    String prefix();
+    String key();
 
-    String help();
+    String description();
 }

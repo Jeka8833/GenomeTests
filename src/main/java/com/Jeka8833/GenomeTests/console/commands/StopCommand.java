@@ -18,12 +18,12 @@ public class StopCommand implements Command {
     }
 
     @Override
-    public String prefix() {
+    public String key() {
         return "stop";
     }
 
     @Override
-    public String help() {
+    public String description() {
         return "stop - force stop all simulation";
     }
 }

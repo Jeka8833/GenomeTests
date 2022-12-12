@@ -7,7 +7,6 @@ public abstract class TreeBlock implements CellLayers {
 
     private final TreeLive treeLive;
     private int startGen;
-    private boolean useGen;
 
     public TreeBlock(TreeLive treeLive, int startGen) {
         this.startGen = startGen;
@@ -24,13 +23,5 @@ public abstract class TreeBlock implements CellLayers {
 
     public void setStartGen(int startGen) {
         this.startGen = startGen;
-    }
-
-    public boolean isUseGen() {
-        return useGen;
-    }
-
-    public void setUseGen(boolean useGen) {
-        this.useGen = useGen;
     }
 }

@@ -11,16 +11,16 @@ public class HelpCommand implements Command {
     @Override
     public void execute(String command, WorldTimeManager worldTimeManager) throws Exception {
         LOGGER.info("Command list:");
-        for (Command c : Command.COMMANDS) LOGGER.info(" * " + c.help());
+        for (Command c : Command.COMMANDS) LOGGER.info(" * " + c.description());
     }
 
     @Override
-    public String prefix() {
+    public String key() {
         return "help";
     }
 
     @Override
-    public String help() {
+    public String description() {
         return "help - show list command";
     }
 }

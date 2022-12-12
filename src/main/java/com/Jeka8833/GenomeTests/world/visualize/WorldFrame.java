@@ -30,11 +30,13 @@ public class WorldFrame implements Runnable {
     private boolean upPress = false;
     private boolean downPress = false;
     public long window;
+    private volatile boolean forceClose = false;
 
     private double lastTime = 0;
     public int width = 300;
     public int height = 300;
     public float aspect = 1;
+
     public WorldFrame(World world) {
         this(world, null);
     }
@@ -106,7 +108,7 @@ public class WorldFrame implements Runnable {
 
         GL.createCapabilities();
         layerManager.init(this);
-        while (!glfwWindowShouldClose(window)) {
+        while (!forceClose && !glfwWindowShouldClose(window)) {
             double time = GLFW.glfwGetTime();
             float delta = (float) (time - lastTime);
             lastTime = time;
@@ -180,6 +182,10 @@ public class WorldFrame implements Runnable {
 
     public World getWorld() {
         return world;
+    }
+
+    public void destroyFrame() {
+        forceClose = true;
     }
 
     public static void init() {

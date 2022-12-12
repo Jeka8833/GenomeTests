@@ -53,12 +53,12 @@ public class SpeedCommand implements Command {
     }
 
     @Override
-    public String prefix() {
+    public String key() {
         return "speed";
     }
 
     @Override
-    public String help() {
+    public String description() {
         return "speed <World Name (parameter 'all' to select all worlds) : String>" +
                 " <Tick per minute, set 0 to disable limits " +
                 "(But the default value shows you the list of speeds) : int> - set speed to the World(s)";

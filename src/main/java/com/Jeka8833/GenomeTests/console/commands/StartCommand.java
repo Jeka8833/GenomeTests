@@ -19,12 +19,12 @@ public class StartCommand implements Command {
     }
 
     @Override
-    public String prefix() {
+    public String key() {
         return "start";
     }
 
     @Override
-    public String help() {
+    public String description() {
         return "start - Run all simulations";
     }
 }

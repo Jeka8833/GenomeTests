@@ -49,12 +49,12 @@ public class TickCommand implements Command {
     }
 
     @Override
-    public String prefix() {
+    public String key() {
         return "tick";
     }
 
     @Override
-    public String help() {
+    public String description() {
         return "tick <World Name (parameter 'all' to select all worlds) : String> <Tick count (default 1) : int>";
     }
 }

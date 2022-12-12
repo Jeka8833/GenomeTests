@@ -5,17 +5,23 @@ import com.Jeka8833.GenomeTests.world.Cell;
 
 public class Wood extends TreeBlock {
 
+    private boolean isGrew = false;
+
     public Wood(TreeLive treeLive, int startGen) {
         super(treeLive, startGen);
     }
 
     @Override
     public void tick(Cell cell) {
-        if (!isUseGen()) {
-            getTreeLive().useGen(cell, this);
-            setUseGen(true);
+        getTreeLive().addHeath(-3);
+
+        if (getTreeLive().isDead()) {
+            cell.layers.remove(this);
+        } else {
+            if (!isGrew) {
+                getTreeLive().useGen(cell, this);
+                isGrew = true;
+            }
         }
-        getTreeLive().addHeath(-5);
-        if (getTreeLive().isDead()) cell.layers.remove(this);
     }
 }

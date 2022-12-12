@@ -6,14 +6,11 @@ import org.apache.logging.log4j.Logger;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 public class WorldTimeManager implements Serializable {
     private static final Logger LOGGER = LogManager.getLogger(WorldTimeManager.class);
-    private static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
+    private ExecutorService threadPool = null;
 
     private final List<World> worlds = new ArrayList<>();
     private transient CyclicBarrier lockThreads;
@@ -22,15 +19,17 @@ public class WorldTimeManager implements Serializable {
     private volatile boolean tickSynchronization = false;
 
     public void start() {
-        if (run || worlds.isEmpty()) return;
-        run = true;
+        if (isRun() || worlds.isEmpty()) return;
+        //run = true;
 
         World[] worldList = worlds.stream().filter(world -> !world.isSkipSimulation()).toArray(World[]::new);
 
+        threadPool = Executors.newFixedThreadPool(worldList.length);
         lockThreads = new CyclicBarrier(worldList.length);
         for (final World world : worldList) {
-            THREAD_POOL.execute(() -> {
-                while (run) {
+            threadPool.execute(() -> {
+                while (!Thread.currentThread().isInterrupted()) {
+                    System.out.println(!Thread.currentThread().isInterrupted());
                     try {
                         world.tick();
                     } catch (InterruptedException e) {
@@ -48,12 +47,27 @@ public class WorldTimeManager implements Serializable {
         }
     }
 
+    public void stopAndAwait() {
+        if (threadPool == null) return;
+
+        threadPool.shutdownNow();
+        try {
+            threadPool.awaitTermination(5, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void stop() {
-        run = false;
+        if (threadPool == null) return;
+
+        threadPool.shutdownNow();
     }
 
     public boolean isRun() {
-        return run;
+        if (threadPool == null) return false;
+
+        return !threadPool.isShutdown();
     }
 
     public boolean isTickSynchronization() {

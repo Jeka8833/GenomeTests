@@ -21,12 +21,12 @@ public class ListCommand implements Command {
     }
 
     @Override
-    public String prefix() {
+    public String key() {
         return "list";
     }
 
     @Override
-    public String help() {
+    public String description() {
         return "list - return world list";
     }
 }

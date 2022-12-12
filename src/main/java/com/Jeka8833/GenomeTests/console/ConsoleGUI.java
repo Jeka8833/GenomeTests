@@ -107,12 +107,12 @@ public class ConsoleGUI extends javax.swing.JFrame {
             addLog("> " + inputText);
 
             for (Command command : Command.COMMANDS) {
-                if (command.prefix().equalsIgnoreCase(args[0])) {
+                if (command.key().equalsIgnoreCase(args[0])) {
                     String argument = args.length >= 2 ? args[1] : null;
                     try {
                         if (argument != null && (argument.equalsIgnoreCase("-help") ||
                                 argument.equalsIgnoreCase("-h"))) {
-                            addLog(command.help());
+                            addLog(command.description());
                         } else {
                             command.execute(argument, timeManager);
                         }
@@ -120,7 +120,7 @@ public class ConsoleGUI extends javax.swing.JFrame {
                     } catch (Exception e) {
                         if (e.getMessage() == null || e.getMessage().isEmpty()) {
                             addLog("Incorrect parameters");
-                            addLog(command.help());
+                            addLog(command.description());
                         } else {
                             addLog("Fail run > " + e.getMessage());
                         }
