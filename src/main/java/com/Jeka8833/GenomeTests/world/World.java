@@ -11,14 +11,9 @@ import java.util.concurrent.Executors;
 
 public class World implements Serializable {
     private static final Logger LOGGER = LogManager.getLogger(World.class);
-    private static final int timeForSamples = 30_000;
-
-    private transient ExecutorService threads;
+    public static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
     private int threadCount = 1;
 
-    private transient long timeToNextTick = 0;
-    private transient int countTickPerMinute = Integer.MIN_VALUE;
-    private transient int lastTickCount = 0;
     private int tickCount = 0;
 
     private String name = UUID.randomUUID().toString();
@@ -26,9 +21,6 @@ public class World implements Serializable {
     private final int height;
     private final Cell[] map;
     private final WorldGenerator generator;
-
-    private boolean skipSimulation = false;
-    private int limitTickPerMinute = 0; // <= 0 is disable
 
     public World(int width, int height, WorldGenerator generator) {
         if (width < 1 || height < 1) throw new IllegalArgumentException("Width or height < 0");
@@ -46,24 +38,9 @@ public class World implements Serializable {
     }
 
     public void tick() throws InterruptedException {
-        if (skipSimulation) return;
-        long time = System.currentTimeMillis();
-        if (limitTickPerMinute > 0) {
-            long delayTime = (((tickCount - lastTickCount + 1) * 60_000L) / limitTickPerMinute) -
-                    (timeForSamples - (timeToNextTick - time));
-
-            if (delayTime > 0) Thread.sleep(delayTime);
-        }
-        if (time > timeToNextTick) {
-            countTickPerMinute =
-                    (int) ((60_000 * (tickCount - lastTickCount)) / (timeForSamples + (time - timeToNextTick)));
-            timeToNextTick = time + timeForSamples;
-            lastTickCount = tickCount;
-        }
-
         generator.preTick();
-
-        if (threads == null) {
+/*
+        if (threadCount <= 1) {
             new WorldUpdateLayers(this, 0, map.length, null).run();
         } else {
             var lock = new CountDownLatch(threadCount);
@@ -74,13 +51,13 @@ public class World implements Serializable {
 
                 if (i >= threadCount - 1) // Check last iteration
                     worldWorker.run();
-                else threads.execute(worldWorker);
+                else THREAD_POOL.execute(worldWorker);
             }
 
             lock.await(); // Wait to the end working all threads
         }
-
-        if (threads == null) {
+*/
+        if (threadCount <= 1) {
             new WorldRunnable(this, 0, map.length, null).run();
         } else {
             var lock = new CountDownLatch(threadCount);
@@ -91,7 +68,7 @@ public class World implements Serializable {
 
                 if (i >= threadCount - 1) // Check last iteration
                     worldWorker.run();
-                else threads.execute(worldWorker);
+                else THREAD_POOL.execute(worldWorker);
             }
 
             lock.await(); // Wait to the end working all threads
@@ -114,12 +91,7 @@ public class World implements Serializable {
     }
 
     public void setThreadCount(int threadCount) {
-        threads = threadCount <= 1 ? null : Executors.newFixedThreadPool(threadCount - 1);
         this.threadCount = threadCount;
-    }
-
-    public int getAvgTickPerMinute() {
-        return countTickPerMinute;
     }
 
     public int getTickCount() {
@@ -140,22 +112,6 @@ public class World implements Serializable {
 
     public WorldGenerator getGenerator() {
         return generator;
-    }
-
-    public boolean isSkipSimulation() {
-        return skipSimulation;
-    }
-
-    public void setSkipSimulation(boolean skipSimulation) {
-        this.skipSimulation = skipSimulation;
-    }
-
-    public int getLimitTickPerMinute() {
-        return limitTickPerMinute;
-    }
-
-    public void setLimitTickPerMinute(int limitTickPerMinute) {
-        this.limitTickPerMinute = limitTickPerMinute;
     }
 
     public Cell getCell(int x, int y) {
@@ -182,7 +138,7 @@ public class World implements Serializable {
             if (lock != null) lock.countDown();
         }
     }
-
+/*
     private record WorldUpdateLayers(World world, int from, int to, CountDownLatch lock) implements Runnable {
         @Override
         public void run() {
@@ -190,5 +146,5 @@ public class World implements Serializable {
 
             if (lock != null) lock.countDown();
         }
-    }
+    }*/
 }

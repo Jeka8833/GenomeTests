@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Cell implements Serializable {
 
-    public final List<CellLayers> layers = Collections.synchronizedList(new ArrayList<>());
-    private CellLayers[] cloneUnmodifiableLayers = null;
+    public final List<CellLayers> layers = new CopyOnWriteArrayList<>();
 
     public final World world;
     public final int x;
@@ -20,22 +20,16 @@ public class Cell implements Serializable {
         this.y = y;
     }
 
-    public void updateLayers() {
-        cloneUnmodifiableLayers = layers.toArray(CellLayers[]::new);
-    }
-
     public void tick() {
-        for (CellLayers cloneUnmodifiableLayer : cloneUnmodifiableLayers) {
+        for (CellLayers cloneUnmodifiableLayer : layers) {
             cloneUnmodifiableLayer.tick(this);
         }
     }
 
     public <T> T getLayer(Class<T> type) {
-        synchronized (layers) {
-            for (CellLayers cellLayers : layers) {
-                if (type.isInstance(cellLayers)) {
-                    return type.cast(cellLayers);
-                }
+        for (CellLayers cellLayers : layers) {
+            if (type.isInstance(cellLayers)) {
+                return type.cast(cellLayers);
             }
         }
         return null;

@@ -7,7 +7,7 @@ import com.Jeka8833.GenomeTests.testWorld.objects.Wood;
 import com.Jeka8833.GenomeTests.world.Cell;
 import com.Jeka8833.GenomeTests.world.CellLayers;
 import com.Jeka8833.GenomeTests.world.visualize.FormLayerManager;
-import com.Jeka8833.GenomeTests.world.visualize.WorldFrame;
+import com.Jeka8833.GenomeTests.world.visualize.Window;
 import org.lwjgl.BufferUtils;
 
 import java.nio.DoubleBuffer;
@@ -30,8 +30,8 @@ public class FrameManager implements FormLayerManager {
     private Cell selectedCell = null;
 
     @Override
-    public void init(WorldFrame worldFrame) {
-        glfwSetMouseButtonCallback(worldFrame.window, (windowHnd, button, action, mods) -> {
+    public void init(Window worldFrame) {
+        glfwSetMouseButtonCallback(worldFrame.getId(), (windowHnd, button, action, mods) -> {
             if (action == GLFW_RELEASE && button == GLFW_MOUSE_BUTTON_1) {
                 click = true;
             }
@@ -53,7 +53,7 @@ public class FrameManager implements FormLayerManager {
     }
 
     @Override
-    public void preRender(WorldFrame worldFrame) {
+    public void preRender(Window worldFrame) {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_vertex_handle);
         glVertexPointer(vertex_size, GL_FLOAT, 0, 0);
     }
@@ -81,16 +81,16 @@ public class FrameManager implements FormLayerManager {
     }
 
     @Override
-    public void postRender(WorldFrame worldFrame) {
+    public void postRender(Window worldFrame) {
         if (click) {
             click = false;
             DoubleBuffer xBuffer = BufferUtils.createDoubleBuffer(1);
             DoubleBuffer yBuffer = BufferUtils.createDoubleBuffer(1);
-            glfwGetCursorPos(worldFrame.window, xBuffer, yBuffer);
+            glfwGetCursorPos(worldFrame.getId(), xBuffer, yBuffer);
             float zoomWidth = worldFrame.aspect >= 1.0 ? worldFrame.zoom * worldFrame.aspect : worldFrame.zoom;
             float zoomHeight = worldFrame.aspect >= 1.0 ? worldFrame.zoom : worldFrame.zoom * worldFrame.aspect;
-            int x = (int) (worldFrame.pos.x + (xBuffer.get(0) * zoomWidth) / worldFrame.width);
-            int y = (int) (worldFrame.pos.y + ((worldFrame.height - yBuffer.get(0)) * zoomHeight) / worldFrame.height);
+            int x = (int) (worldFrame.pos.x + (xBuffer.get(0) * zoomWidth) / worldFrame.getPosAndSize().z());
+            int y = (int) (worldFrame.pos.y + ((worldFrame.getPosAndSize().w() - yBuffer.get(0)) * zoomHeight) / worldFrame.getPosAndSize().w());
             selectedCell = worldFrame.getWorld().getCell(x, y);
         }
 

@@ -1,8 +1,0 @@
-<root>
-    <item name='com.Jeka8833.GenomeTests.console.console.commands.TestCommand java.lang.String description()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-    <item name='com.Jeka8833.GenomeTests.console.console.commands.TestCommand java.lang.String key()'>
-        <annotation name='org.jetbrains.annotations.NotNull'/>
-    </item>
-</root>

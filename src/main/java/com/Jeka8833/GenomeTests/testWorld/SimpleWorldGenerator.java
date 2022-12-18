@@ -4,8 +4,10 @@ import com.Jeka8833.GenomeTests.testWorld.objects.Grass;
 import com.Jeka8833.GenomeTests.testWorld.objects.Seed;
 import com.Jeka8833.GenomeTests.testWorld.objects.Sheet;
 import com.Jeka8833.GenomeTests.testWorld.objects.Wood;
+import com.Jeka8833.GenomeTests.util.WorldManager;
 import com.Jeka8833.GenomeTests.world.*;
-import com.Jeka8833.GenomeTests.world.visualize.WorldFrame;
+import com.Jeka8833.GenomeTests.world.visualize.Window;
+import com.Jeka8833.GenomeTests.world.visualize.WindowManager;
 
 import java.util.List;
 
@@ -19,10 +21,10 @@ public class SimpleWorldGenerator extends WorldGenerator {
 
     private World world;
 
-    private final WorldTimeManager timeManager;
+    private final WorldManager worldManager;
 
-    public SimpleWorldGenerator(WorldTimeManager timeManager) {
-        this.timeManager = timeManager;
+    public SimpleWorldGenerator(WorldManager worldManager) {
+        this.worldManager = worldManager;
     }
 
     @Override
@@ -53,7 +55,7 @@ public class SimpleWorldGenerator extends WorldGenerator {
             }
         }
         if (allDead) {
-            restart(timeManager, world);
+            restart(worldManager, world);
         }
     }
 
@@ -90,36 +92,22 @@ public class SimpleWorldGenerator extends WorldGenerator {
         }
     }
 
-    private static WorldFrame window = null;
-    private static Thread restartThread = null;
+    private static Window window = null;
 
-    public static void restart(WorldTimeManager timeManager, World world) {
-        if (restartThread == null || !restartThread.isAlive()) {
-            restartThread = new Thread(() -> {
-                timeManager.stopAndAwait();
-                SimpleWorldGenerator.close(timeManager, world);
-                SimpleWorldGenerator.createWorld(timeManager,
-                        Integer.parseInt(world.getName().split("-")[1]) + 1);
-                timeManager.start();
-            });
-            restartThread.setDaemon(true);
-            restartThread.setPriority(Thread.MIN_PRIORITY);
-            restartThread.start();
-        }
+    public static void restart(WorldManager worldManager, World world) {
+        worldManager.getSimulation(world).stop();
+        World newWorld = createWorld(worldManager,
+                Integer.parseInt(world.getName().split("-")[1]) + 1, false);
+        if (window != null) window.setWorld(newWorld);
+        WorldSimulation simulation = worldManager.add(newWorld);
+        simulation.start();
     }
 
-    public static void createWorld(WorldTimeManager timeManager, int number) {
-        var world = new World(WORLD_WIDTH, WORLD_HEIGHT, new SimpleWorldGenerator(timeManager));
+    public static World createWorld(WorldManager worldManager, int number, boolean createWindow) {
+        var world = new World(WORLD_WIDTH, WORLD_HEIGHT, new SimpleWorldGenerator(worldManager));
         world.setName("TestWorld-" + number);
-        world.setThreadCount(4);
-        world.setLimitTickPerMinute(0);
-        window = WorldFrame.createWindow(world, new FrameManager());
-        timeManager.addWorld(world);
-    }
-
-    public static void close(WorldTimeManager timeManager, World world) {
-        timeManager.removeWorld(world.getName());
-        if (window != null)
-            window.destroyFrame();
+        world.setThreadCount(11);
+        if(createWindow) window = WindowManager.createWindow(world, new FrameManager());
+        return world;
     }
 }

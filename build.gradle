@@ -48,17 +48,24 @@ dependencies {
     implementation group: 'org.joml', name: 'joml', version: '1.10.5'
 
     // https://mvnrepository.com/artifact/org.jetbrains/annotations
-    implementation group: 'org.jetbrains', name: 'annotations', version: '23.0.0'
+    implementation group: 'org.jetbrains', name: 'annotations', version: '23.1.0'
 
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.19.0'
 
     // https://mvnrepository.com/artifact/info.picocli/picocli
-    implementation 'info.picocli:picocli:4.6.3'
+    implementation group: 'info.picocli', name: 'picocli', version: '4.7.0'
+    annotationProcessor 'info.picocli:picocli-codegen:4.7.0'
+
+    // https://search.maven.org/artifact/com.bucket4j/bucket4j-core/8.2.RC2/jar
+    implementation 'com.bucket4j:bucket4j-core:8.2.RC2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+}
 
+compileJava {
+    options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
 }
 
 test {

@@ -4,9 +4,8 @@
  */
 package com.Jeka8833.GenomeTests.console;
 
-import com.Jeka8833.GenomeTests.console.console.Command;
-import com.Jeka8833.GenomeTests.world.World;
-import com.Jeka8833.GenomeTests.world.WorldTimeManager;
+import com.Jeka8833.GenomeTests.util.WorldManager;
+import com.Jeka8833.GenomeTests.world.WorldSimulation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +18,7 @@ import javax.swing.*;
 public class ConsoleGUI extends javax.swing.JFrame {
     private static final Logger LOGGER = LogManager.getLogger(ConsoleGUI.class);
 
-    private WorldTimeManager timeManager;
+    private WorldManager worldManager;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -100,35 +99,9 @@ public class ConsoleGUI extends javax.swing.JFrame {
     private void consoleInputUIKeyPressed(java.awt.event.@NotNull KeyEvent evt) {//GEN-FIRST:event_consoleInputUIKeyPressed
         if (evt.getKeyCode() == 10) {
             String inputText = consoleInputUI.getText();
-
-            String[] args = inputText.split(" ", 2);
-            if (args.length == 0) return;
-
             addLog("> " + inputText);
-
-            for (Command command : Command.COMMANDS) {
-                if (command.key().equalsIgnoreCase(args[0])) {
-                    String argument = args.length >= 2 ? args[1] : null;
-                    try {
-                        if (argument != null && (argument.equalsIgnoreCase("-help") ||
-                                argument.equalsIgnoreCase("-h"))) {
-                            addLog(command.description());
-                        } else {
-                            command.execute(argument, timeManager);
-                        }
-                        consoleInputUI.setText("");
-                    } catch (Exception e) {
-                        if (e.getMessage() == null || e.getMessage().isEmpty()) {
-                            addLog("Incorrect parameters");
-                            addLog(command.description());
-                        } else {
-                            addLog("Fail run > " + e.getMessage());
-                        }
-                    }
-                    return;
-                }
-            }
-            addLog("Unknown command");
+            CommandProcessor.process(worldManager, inputText);
+            consoleInputUI.setText("");
         }
     }//GEN-LAST:event_consoleInputUIKeyPressed
 
@@ -143,17 +116,24 @@ public class ConsoleGUI extends javax.swing.JFrame {
         }
 
         var timer = new Timer(3000, e -> {
-            if (console.timeManager != null) {
-                var sb = new StringBuilder();
+            if (console.worldManager != null) {
+                var sb = new StringBuilder("Worlds:\n");
 
-                sb.append("Simulation ").append(console.timeManager.getWorlds().size()).append(" worlds is ")
-                        .append(console.timeManager.isRun() ? "Started" : "Stopped").append("\n");
-
-                for (int i = 0; i < console.timeManager.getWorlds().size(); i++) {
-                    World world = console.timeManager.getWorlds().get(i);
-                    sb.append(world.getName()).append(": TPM: ")
-                            .append(world.getAvgTickPerMinute()).append("\n")
-                            .append("Tick: ").append(world.getTickCount()).append("\n");
+                for (WorldSimulation simulation : console.worldManager.getWorldSimulations()) {
+                    sb.append(simulation.getWorld().getName())
+                            .append(": ")
+                            .append(switch (simulation.getWorldStatus()) {
+                                case WorldSimulation.WORLD_STARTED -> "Started";
+                                case WorldSimulation.WORLD_TRYING_STOP -> "Try Stop";
+                                case WorldSimulation.WORLD_STOPPED -> "Stopped";
+                                case WorldSimulation.WORLD_FREEZE -> "Crash";
+                                default -> "Unknown";
+                            })
+                            .append("\nTPM: ")
+                            .append(simulation.getTicksPerMinute())
+                            .append(" Ticks: ")
+                            .append(simulation.getWorld().getTickCount())
+                            .append("\n\n");
                 }
 
                 console.statusPaneUI.setText(sb.toString());
@@ -175,8 +155,8 @@ public class ConsoleGUI extends javax.swing.JFrame {
         logPaneUI.append(text + "\n");
     }
 
-    public void setTimeManager(WorldTimeManager timeManager) {
-        this.timeManager = timeManager;
+    public void setTimeManager(WorldManager worldManager) {
+        this.worldManager = worldManager;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

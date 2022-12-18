@@ -1,4 +1,4 @@
-package com.Jeka8833.GenomeTests.world;
+package com.Jeka8833.GenomeTests.util;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
