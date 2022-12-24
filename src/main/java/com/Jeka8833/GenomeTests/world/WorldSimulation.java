@@ -51,7 +51,7 @@ public class WorldSimulation implements Serializable {
     public void start() {
         if (isRun()) return;
 
-        thread = new Thread(() -> {
+        thread = Thread.startVirtualThread(() -> {
             try {
                 if (synchronizer != null) synchronizer.registerWorld(this);
                 while (worldStatus == WORLD_STARTED) {
@@ -81,9 +81,7 @@ public class WorldSimulation implements Serializable {
                 if (synchronizer != null) synchronizer.unregisterWorld(this);
             }
         });
-        thread.setDaemon(true);
         worldStatus = WORLD_STARTED;
-        thread.start();
     }
 
     public void stop() {

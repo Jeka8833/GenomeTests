@@ -14,12 +14,11 @@ public class Seed extends TreeBlock {
         if (cell.getLayer(Grass.class) != null) {
             // The seed in grass
 
-            getTreeLive().addHeath(-10);
+            getTreeLive().addHeath(-1);
 
             cell.layers.remove(this);
-            if (!getTreeLive().isDead())
-                getTreeLive().useGen(cell, this);
-        } else if (cell.layers.isEmpty()) {
+            if (!getTreeLive().isDead()) getTreeLive().useGen(cell, this, getStartGen());
+        } else if (cell.layers.size() == 1) {
             // The seed is falls or hangs from a tree.
 
             if (getTreeLive().isDead()) {
@@ -28,7 +27,7 @@ public class Seed extends TreeBlock {
                 Cell bottomCell = cell.world.getShiftedCell(cell.x, cell.y, 0, -1);
                 bottomCell.layers.add(this);
             } else {
-                getTreeLive().addHeath(-5);
+                getTreeLive().addHeath(-1);
             }
         } else {
             // The seed are blocked by other things, it is dead.

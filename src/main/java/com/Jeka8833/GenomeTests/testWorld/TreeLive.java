@@ -6,6 +6,7 @@ import org.intellij.lang.annotations.MagicConstant;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TreeLive implements Serializable {
     // 0000 0000  0000 0000  0000 0000  0000 0000
@@ -44,69 +45,67 @@ public class TreeLive implements Serializable {
     // 0000 0000 - Value
 
     // format:off
-    private static final int PARAM_CONDITION1    = 0b1100_0000__0000_0000__0000_0000__0000_0000;    // Mask
-    private static final int PARAM_CONDITION2    = 0b0011_0000__0000_0000__0000_0000__0000_0000;    // Mask
+    private static final int PARAM_CONDITION1 = 0b1100_0000__0000_0000__0000_0000__0000_0000;    // Mask
+    private static final int PARAM_CONDITION2 = 0b0011_0000__0000_0000__0000_0000__0000_0000;    // Mask
 
-    private static final int PARAM_INVERT_C1     = 0b0000_1000__0000_0000__0000_0000__0000_0000;
-    private static final int PARAM_INVERT_C2     = 0b0000_0100__0000_0000__0000_0000__0000_0000;
-    private static final int PARAM_OPERATOR      = 0b0000_0011__0000_0000__0000_0000__0000_0000;    // Mask
+    private static final int PARAM_INVERT_C1 = 0b0000_1000__0000_0000__0000_0000__0000_0000;
+    private static final int PARAM_INVERT_C2 = 0b0000_0100__0000_0000__0000_0000__0000_0000;
+    private static final int PARAM_OPERATOR = 0b0000_0011__0000_0000__0000_0000__0000_0000;    // Mask
 
-    private static final int PARAM_C_JUMP        = 0b0000_0000__1000_0000__0000_0000__0000_0000;
-    private static final int PARAM_C_CREATE      = 0b0000_0000__0100_0000__0000_0000__0000_0000;
-    private static final int PARAM_A_JUMP        = 0b0000_0000__0010_0000__0000_0000__0000_0000;
-    private static final int PARAM_A_CREATE      = 0b0000_0000__0001_0000__0000_0000__0000_0000;
+    private static final int PARAM_C_JUMP = 0b0000_0000__1000_0000__0000_0000__0000_0000;
+    private static final int PARAM_C_CREATE = 0b0000_0000__0100_0000__0000_0000__0000_0000;
+    private static final int PARAM_A_JUMP = 0b0000_0000__0010_0000__0000_0000__0000_0000;
+    private static final int PARAM_A_CREATE = 0b0000_0000__0001_0000__0000_0000__0000_0000;
 
-    private static final int PARAM_JUMP          = 0b0000_0000__0000_1111__1000_0000__0000_0000;    // Mask
+    private static final int PARAM_JUMP = 0b0000_0000__0000_1111__1000_0000__0000_0000;    // Mask
 
-    private static final int PARAM_CREATE_SIDES  = 0b0000_0000__0000_0000__0111_1000__0000_0000;    // Mask
-    private static final int PARAM_CREATE_RIGHT  = 0b0000_0000__0000_0000__0100_0000__0000_0000;
-    private static final int PARAM_CREATE_LEFT   = 0b0000_0000__0000_0000__0010_0000__0000_0000;
-    private static final int PARAM_CREATE_TOP    = 0b0000_0000__0000_0000__0001_0000__0000_0000;
+    private static final int PARAM_CREATE_SIDES = 0b0000_0000__0000_0000__0111_1000__0000_0000;    // Mask
+    private static final int PARAM_CREATE_RIGHT = 0b0000_0000__0000_0000__0100_0000__0000_0000;
+    private static final int PARAM_CREATE_LEFT = 0b0000_0000__0000_0000__0010_0000__0000_0000;
+    private static final int PARAM_CREATE_TOP = 0b0000_0000__0000_0000__0001_0000__0000_0000;
 
     private static final int PARAM_CREATE_BOTTOM = 0b0000_0000__0000_0000__0000_1000__0000_0000;
-    private static final int PARAM_CREATE_TYPE   = 0b0000_0000__0000_0000__0000_0111__0000_0000;    // Mask
-    private static final int PARAM_CREATE_SEED   = 0b0000_0000__0000_0000__0000_0100__0000_0000;
-    private static final int PARAM_CREATE_SHEET  = 0b0000_0000__0000_0000__0000_0010__0000_0000;
-    private static final int PARAM_CREATE_WOOD   = 0b0000_0000__0000_0000__0000_0001__0000_0000;
+    private static final int PARAM_CREATE_TYPE = 0b0000_0000__0000_0000__0000_0111__0000_0000;    // Mask
+    private static final int PARAM_CREATE_SEED = 0b0000_0000__0000_0000__0000_0100__0000_0000;
+    private static final int PARAM_CREATE_SHEET = 0b0000_0000__0000_0000__0000_0010__0000_0000;
+    private static final int PARAM_CREATE_WOOD = 0b0000_0000__0000_0000__0000_0001__0000_0000;
 
-    private static final int PARAM_VALUE         = 0b0000_0000__0000_0000__0000_0000__1111_1111;    // Mask
+    private static final int PARAM_VALUE = 0b0000_0000__0000_0000__0000_0000__1111_1111;    // Mask
     // format:on
 
     private static final Comparator<TreeLive.Block> comparator = Comparator.nullsLast(Comparator.comparing(Block::priority));
-    public static final List<TreeLive> treeList = new ArrayList<>();
     private static final Random RANDOM = new Random();
 
     private final Genome genome;
-    private final int id;
-    private int heath = 0;
 
-    protected TreeLive(int id, final Genome genome) {
-        this.id = id;
+    private final AtomicInteger heath = new AtomicInteger();
+
+    protected TreeLive(final Genome genome) {
         this.genome = genome;
     }
 
-    public int getId() {
-        return id;
+    public void addHeath(int heath) {
+        this.heath.getAndAdd(heath);
     }
 
-    public void addHeath(int heath) {
-        this.heath += heath;
+    public int getHeath() {
+        return heath.get();
     }
 
     public boolean isDead() {
-        return heath <= 0;
+        return heath.get() <= 0;
     }
 
     public Genome getGenome() {
         return genome;
     }
 
-    public void useGen(Cell cell, TreeBlock treeBlock) {
-        int gen = getGenome().getChromosomes()[0];
+    public void useGen(Cell cell, TreeBlock treeBlock, int startGen) {
+        int gen = getGenome().chromosomes()[startGen]; // TODO: Bug
 
         boolean condition1 = checkCondition(gen, cell.y, PARAM_CONDITION1, PARAM_INVERT_C1);
         boolean condition2 = checkCondition(
-                gen, Math.min(PARAM_VALUE, treeBlock.getTreeLive().heath), PARAM_CONDITION2, PARAM_INVERT_C2);
+                gen, Math.min(PARAM_VALUE, treeBlock.getTreeLive().heath.get()), PARAM_CONDITION2, PARAM_INVERT_C2);
 
         int operator = (gen & PARAM_OPERATOR) >>> 24;
         boolean conditionState = switch (operator) {
@@ -129,32 +128,18 @@ public class TreeLive implements Serializable {
 
         if (activateJump) {
             int jumpIndex = (gen & PARAM_JUMP) >>> 15;
-            if (jumpIndex < treeBlock.getTreeLive().getGenome().getChromosomes().length)
-                treeBlock.setStartGen(jumpIndex);
+            startGen = jumpIndex % treeBlock.getTreeLive().getGenome().chromosomes().length;
         }
-        if (activateCreate) setBlocks(gen, cell, this, treeBlock.getStartGen(), 2);
+        if (activateCreate) setBlocks(gen, cell, this, startGen, 2);
     }
 
     public static TreeLive newTree(TreeLive parents) {
-        if (parents == null) {
-            Genome genome = Genome.createGenome(16);
-            var treeLive = new TreeLive(genome.getId(), genome);
-            treeLive.addHeath(RANDOM.nextInt(50)); // 0-50  HP
-            treeList.add(treeLive);
-            return treeLive;
-        } else {
-            if (RANDOM.nextInt(101) <= 20) { // Random 20%
-                Genome genome = parents.getGenome().mutation(0.1f); // 10% Mutation
-                var treeLive = new TreeLive(genome.getId(), genome);
-                treeLive.addHeath(5 + RANDOM.nextInt(15)); // 5-20 HP
-                treeList.add(treeLive);
-                return treeLive;
-            }
-        }
-        var treeLive = new TreeLive(parents.getId(), parents.getGenome()); // Clone genome
-        treeLive.addHeath(RANDOM.nextInt(50)); // 0-50 HP
-        treeList.add(treeLive);
-        return treeLive;
+        var newTree = new TreeLive(parents == null ?
+                Genome.createGenome(16) :
+                RANDOM.nextInt(101) <= 20 ? parents.getGenome().mutation(0.2f) : parents.getGenome());
+
+        newTree.addHeath(100 + RANDOM.nextInt(100)); // 100-200 HP
+        return newTree;
     }
 
     private static void setBlocks(int gen, Cell cell, TreeLive live,
@@ -272,7 +257,7 @@ public class TreeLive implements Serializable {
         // TODO: Bugged external annotations, can be removed if needed
         private static Block createBlock(Cell cell, int gen,
                                          @MagicConstant(flags = {PARAM_CREATE_LEFT, PARAM_CREATE_RIGHT, PARAM_CREATE_TOP, PARAM_CREATE_BOTTOM})
-                                                 int side) {
+                                         int side) {
             if ((gen & side) != side) return null;
             Cell temp = switch (side) {
                 case PARAM_CREATE_LEFT:

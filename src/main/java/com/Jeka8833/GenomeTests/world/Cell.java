@@ -1,8 +1,6 @@
 package com.Jeka8833.GenomeTests.world;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -21,8 +19,8 @@ public class Cell implements Serializable {
     }
 
     public void tick() {
-        for (CellLayers cloneUnmodifiableLayer : layers) {
-            cloneUnmodifiableLayer.tick(this);
+        for (CellLayers layer : layers) {
+            layer.tick(this);
         }
     }
 
@@ -33,5 +31,14 @@ public class Cell implements Serializable {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "Cell{" +
+                "layers=" + layers +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
     }
 }

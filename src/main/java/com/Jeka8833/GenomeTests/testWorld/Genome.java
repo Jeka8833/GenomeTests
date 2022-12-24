@@ -1,52 +1,20 @@
 package com.Jeka8833.GenomeTests.testWorld;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
-public class Genome implements Serializable {
+public record Genome(int[] chromosomes) implements Serializable {
 
-    private static final AtomicInteger INDEX_GENERATOR = new AtomicInteger();
     private static final Random RANDOM = new Random();
 
-    public static final Map<Integer, Genome> genomeMap = new HashMap<>();
-
-    private final int id;
-    private final int[] chromosomes;
-
-    public Genome(int id, int[] chromosomes) {
-        this.id = id;
-        this.chromosomes = chromosomes;
-    }
-
-    public int[] getChromosomes() {
-        return chromosomes;
-    }
-
-    public int getId() {
-        return id;
-    }
-
     public Genome crossing(Genome genome, float percent) {
-        return registerNewGenome(crossing(chromosomes, genome.chromosomes, percent));
+        return new Genome(crossing(chromosomes, genome.chromosomes, percent));
     }
 
     public Genome mutation(float percent) {
-        return registerNewGenome(mutation(chromosomes, percent));
-    }
-
-
-    public static int generateIndex() {
-        return INDEX_GENERATOR.incrementAndGet();
-    }
-
-    public static Genome registerNewGenome(int[] chromosomes) {
-        int id = generateIndex();
-        var genome = new Genome(id, chromosomes);
-        genomeMap.put(id, genome);
-        return genome;
+        return new Genome(mutation(chromosomes, percent));
     }
 
     public static Genome createGenome(int chromosomesCount) {
@@ -54,7 +22,7 @@ public class Genome implements Serializable {
         for (int i = 0; i < chromosomesCount; i++)
             newChromosomes[i] = RANDOM.nextInt();
 
-        return registerNewGenome(newChromosomes);
+        return new Genome(newChromosomes);
     }
 
     public static int[] crossing(int[] chromosomes1, int[] chromosomes2, float percentFirst) {
@@ -80,5 +48,12 @@ public class Genome implements Serializable {
             }
         }
         return newChromosomes;
+    }
+
+    @Override
+    public String toString() {
+        return "Genome{" +
+                "chromosomes=[" + Arrays.stream(chromosomes).mapToObj(Integer::toHexString).collect(Collectors.joining(", ")) +
+                "]}";
     }
 }

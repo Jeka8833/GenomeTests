@@ -13,13 +13,13 @@ public class Wood extends TreeBlock {
 
     @Override
     public void tick(Cell cell) {
-        getTreeLive().addHeath(-3);
+        getTreeLive().addHeath(-8);
 
         if (getTreeLive().isDead()) {
             cell.layers.remove(this);
         } else {
             if (!isGrew) {
-                getTreeLive().useGen(cell, this);
+                getTreeLive().useGen(cell, this, getStartGen());
                 isGrew = true;
             }
         }

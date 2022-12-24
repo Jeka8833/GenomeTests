@@ -4,14 +4,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class World implements Serializable {
     private static final Logger LOGGER = LogManager.getLogger(World.class);
-    public static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
+    public static final ExecutorService THREAD_POOL = Executors.newVirtualThreadPerTaskExecutor();
     private int threadCount = 1;
 
     private int tickCount = 0;
@@ -39,24 +43,7 @@ public class World implements Serializable {
 
     public void tick() throws InterruptedException {
         generator.preTick();
-/*
-        if (threadCount <= 1) {
-            new WorldUpdateLayers(this, 0, map.length, null).run();
-        } else {
-            var lock = new CountDownLatch(threadCount);
-            for (int i = 0; i < threadCount; i++) {
-                int fromPos = (i * map.length) / threadCount;
-                int toPos = ((i + 1) * map.length) / threadCount;
-                var worldWorker = new WorldUpdateLayers(this, fromPos, toPos, lock);
 
-                if (i >= threadCount - 1) // Check last iteration
-                    worldWorker.run();
-                else THREAD_POOL.execute(worldWorker);
-            }
-
-            lock.await(); // Wait to the end working all threads
-        }
-*/
         if (threadCount <= 1) {
             new WorldRunnable(this, 0, map.length, null).run();
         } else {
@@ -138,13 +125,4 @@ public class World implements Serializable {
             if (lock != null) lock.countDown();
         }
     }
-/*
-    private record WorldUpdateLayers(World world, int from, int to, CountDownLatch lock) implements Runnable {
-        @Override
-        public void run() {
-            for (int i = from; i < to; i++) world.map[i].updateLayers();
-
-            if (lock != null) lock.countDown();
-        }
-    }*/
 }

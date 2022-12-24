@@ -6,8 +6,6 @@ import com.Jeka8833.GenomeTests.world.WorldSimulation;
 import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class WorldManager implements Serializable {
 
