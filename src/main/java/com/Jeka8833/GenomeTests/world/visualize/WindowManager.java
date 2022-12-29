@@ -1,7 +1,7 @@
 package com.Jeka8833.GenomeTests.world.visualize;
 
 import com.Jeka8833.GenomeTests.world.World;
-import org.joml.Vector4i;
+import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 import java.util.List;
@@ -16,12 +16,14 @@ public class WindowManager {
     private static final BlockingQueue<Runnable> tasks = new LinkedBlockingQueue<>();
     private static final List<Window> windows = new CopyOnWriteArrayList<>();
 
+    private static double lastTickTime = 0;
+
     static {
         init();
     }
 
     private static void init() {
-        var thread = new Thread(() -> {
+        Thread.startVirtualThread(() -> {
             try {
                 GLFWErrorCallback.createPrint(System.err).set();
                 if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
@@ -36,7 +38,11 @@ public class WindowManager {
                             Runnable run;
                             while ((run = tasks.poll()) != null) run.run();
 
-                            for (Window window : windows) window.tick();
+                            double time = org.lwjgl.glfw.GLFW.glfwGetTime();
+                            double delta = time - lastTickTime;
+                            lastTickTime = time;
+
+                            for (Window window : windows) window.tick(delta);
                             glfwPollEvents();
                         }
                     } catch (Exception e) {
@@ -47,17 +53,18 @@ public class WindowManager {
                 clearAll();
             }
         });
-        thread.setDaemon(true);
-        thread.start();
     }
 
-    public static Window createWindow(World world, FormLayerManager layerManager) {
-        return createWindow(world, layerManager, world.getName(), new Vector4i(100, 100, 320, 320));
+    public static Window createWindow(World world, FormLayer layerManager) {
+        return createWindow(world, layerManager, world == null ? "World" : world.getName(),
+                new Vector2i(100, 100), new Vector2i(320, 320));
     }
 
-    public static Window createWindow(World world, FormLayerManager layerManager, String name, Vector4i posAndSize) {
-        var window = new Window(world, name, layerManager, posAndSize);
-        tasks.add(window::init);
+    public static Window createWindow(World world, FormLayer layerManager, String name,
+                                      Vector2i windowPos, Vector2i windowSize) {
+        var window = new Window(world, layerManager);
+        tasks.add(() -> window.init(windowPos.x(), windowPos.y(), windowSize.x(), windowSize.y()));
+        tasks.add(() -> window.setWindowTitle(name));
         windows.add(window);
         return window;
     }

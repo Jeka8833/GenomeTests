@@ -6,7 +6,12 @@ import com.Jeka8833.GenomeTests.testWorld.FrameManager;
 import com.Jeka8833.GenomeTests.testWorld.SimpleWorldGenerator;
 import com.Jeka8833.GenomeTests.util.WorldManager;
 import com.Jeka8833.GenomeTests.world.World;
+import com.Jeka8833.GenomeTests.world.WorldReplay;
+import com.Jeka8833.GenomeTests.world.WorldSimulation;
 import com.Jeka8833.GenomeTests.world.visualize.WindowManager;
+
+import java.io.IOException;
+import java.nio.file.Path;
 
 public class Main {
 
@@ -15,7 +20,12 @@ public class Main {
 
         WorldManager worldManager = new WorldManager();
         World world = SimpleWorldGenerator.createWorld(worldManager, 0, null);
-        worldManager.add(world);
+        WorldSimulation simulation = worldManager.add(world);
+        /*try {
+            simulation.setCreateReplay(new WorldReplay(Path.of("D:\\User\\Download\\World\\"), 3, 16));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }*/
 
         WindowManager.createWindow(world, new FrameManager());
 

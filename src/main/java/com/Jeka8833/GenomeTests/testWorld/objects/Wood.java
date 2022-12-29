@@ -5,7 +5,7 @@ import com.Jeka8833.GenomeTests.world.Cell;
 
 public class Wood extends TreeBlock {
 
-    private boolean isGrew = false;
+    private int createTick = Integer.MIN_VALUE;
 
     public Wood(TreeLive treeLive, int startGen) {
         super(treeLive, startGen);
@@ -13,14 +13,19 @@ public class Wood extends TreeBlock {
 
     @Override
     public void tick(Cell cell) {
-        getTreeLive().addHeath(-8);
+        getTreeLive().addHeath(-5);
 
-        if (getTreeLive().isDead()) {
+        if (getTreeLive().isDead(cell.world)) {
             cell.layers.remove(this);
         } else {
-            if (!isGrew) {
-                getTreeLive().useGen(cell, this, getStartGen());
-                isGrew = true;
+            Grass grass = cell.getLayer(Grass.class);
+            if (grass != null) {
+                getTreeLive().addHeath(Math.min((int) grass.takeEnergy(), 7));
+            }
+            if (createTick == Integer.MIN_VALUE) createTick = cell.world.getTickCount();
+
+            if (createTick + 1 == cell.world.getTickCount()) {
+                getTreeLive().useGen(cell, this);
             }
         }
     }

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.time.Duration;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class WorldSimulation implements Serializable {
 
@@ -35,7 +36,9 @@ public class WorldSimulation implements Serializable {
     private transient int lastTicks = 0;
 
     private @Nullable SynchronizeSimulation synchronizer;
+    private transient @Nullable WorldReplay createReplay;
     private transient volatile int worldStatus = WORLD_STOPPED;
+    private transient final Object syncStart = new Object();
 
     public WorldSimulation(World world) {
         this(world, null);
@@ -48,40 +51,48 @@ public class WorldSimulation implements Serializable {
         this.synchronizer = synchronizer;
     }
 
-    public void start() {
-        if (isRun()) return;
+    public void start() throws InterruptedException {
+        synchronized (syncStart) {
+            if (isRun()) return;
 
-        thread = Thread.startVirtualThread(() -> {
-            try {
-                if (synchronizer != null) synchronizer.registerWorld(this);
-                while (worldStatus == WORLD_STARTED) {
-                    try {
-                        if (System.currentTimeMillis() > reteMeterTime) {
-                            ticksPerMinute = (int) ((60_000 * (world.getTickCount() - lastTicks)) /
-                                    (System.currentTimeMillis() - reteMeterTime + rateMeterTimeSample));
-                            lastTicks = world.getTickCount();
-                            reteMeterTime = System.currentTimeMillis() + rateMeterTimeSample;
-                        }
-
-                        world.tick();
-
-                        if (synchronizer != null) {
-                            synchronizer.tick();
-                        } else if (rateLimitBucket != null) {
-                            rateLimitBucket.asBlocking().consume(1);
-                        }
-                    } catch (InterruptedException interruptedException) {
-                        break; // Canceling loop
-                    } catch (Exception ex) {
-                        LOGGER.warn("An error has occurred during the tick.", ex);
+            thread = Thread.startVirtualThread(() -> {
+                try {
+                    worldStatus = WORLD_STARTED;
+                    synchronized (syncStart) {
+                        syncStart.notify();
                     }
+                    if (synchronizer != null) synchronizer.registerWorld(this);
+                    while (worldStatus == WORLD_STARTED) {
+                        try {
+                            if (System.currentTimeMillis() > reteMeterTime) {
+                                ticksPerMinute = (int) ((60_000 * (world.getTickCount() - lastTicks)) /
+                                        (System.currentTimeMillis() - reteMeterTime + rateMeterTimeSample));
+                                lastTicks = world.getTickCount();
+                                reteMeterTime = System.currentTimeMillis() + rateMeterTimeSample;
+                            }
+
+                            if (createReplay != null) createReplay.snapshotWorld(world);
+
+                            world.tick();
+
+                            if (synchronizer != null) {
+                                synchronizer.tick();
+                            } else if (rateLimitBucket != null) {
+                                rateLimitBucket.asBlocking().consume(1);
+                            }
+                        } catch (InterruptedException interruptedException) {
+                            break; // Canceling loop
+                        } catch (Exception ex) {
+                            LOGGER.warn("An error has occurred during the tick.", ex);
+                        }
+                    }
+                } finally {
+                    worldStatus = WORLD_STOPPED;
+                    if (synchronizer != null) synchronizer.unregisterWorld(this);
                 }
-            } finally {
-                worldStatus = WORLD_STOPPED;
-                if (synchronizer != null) synchronizer.unregisterWorld(this);
-            }
-        });
-        worldStatus = WORLD_STARTED;
+            });
+            syncStart.wait();
+        }
     }
 
     public void stop() {
@@ -90,7 +101,7 @@ public class WorldSimulation implements Serializable {
     }
 
     @Blocking
-    public boolean stopAndWait() {
+    public boolean stopAndWait() throws InterruptedException {
         stop();
         boolean isStop = waitingEnd(60_000);
         if (isStop) return true;
@@ -144,32 +155,28 @@ public class WorldSimulation implements Serializable {
     }
 
     @Blocking
-    public void waitEnd() {
+    public void waitEnd() throws InterruptedException {
         waitingEnd(0);
     }
 
     @Blocking
-    public boolean waitingEnd(long timeout) {
+    public boolean waitingEnd(long timeout) throws InterruptedException {
         if (timeout < 0) throw new IllegalArgumentException("Invalid value 'time'");
         if (thread == null) return true;
 
-        long startTime = System.currentTimeMillis();
-        while (true) {
-            try {
-                if (timeout == 0) {
-                    thread.join();
-                    return true;
-                }
-
-                return thread.join(Duration.ofMillis(timeout));
-            } catch (IllegalThreadStateException e) {
+        try {
+            if (timeout == 0) {
+                thread.join();
                 return true;
-            } catch (InterruptedException e) {
-                if (timeout != 0) {
-                    timeout -= System.currentTimeMillis() - startTime;
-                    if (timeout <= 0) return false;
-                }
             }
+
+            return thread.join(Duration.ofMillis(timeout));
+        } catch (IllegalThreadStateException e) {
+            return true;
         }
+    }
+
+    public void setCreateReplay(WorldReplay createReplay) {
+        this.createReplay = createReplay;
     }
 }

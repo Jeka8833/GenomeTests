@@ -5,24 +5,27 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public record Genome(int[] chromosomes) implements Serializable {
+public record Genome(int[] chromosomes, int startIndex) implements Serializable {
 
     private static final Random RANDOM = new Random();
 
     public Genome crossing(Genome genome, float percent) {
-        return new Genome(crossing(chromosomes, genome.chromosomes, percent));
+        return new Genome(
+                crossing(chromosomes, genome.chromosomes, percent),
+                (startIndex() + genome.startIndex()) / 2);
     }
 
     public Genome mutation(float percent) {
-        return new Genome(mutation(chromosomes, percent));
+        return new Genome(
+                mutation(chromosomes, percent),
+                startIndex() + RANDOM.nextInt((int) (chromosomes.length * percent)));
     }
 
     public static Genome createGenome(int chromosomesCount) {
         int[] newChromosomes = new int[chromosomesCount];
-        for (int i = 0; i < chromosomesCount; i++)
-            newChromosomes[i] = RANDOM.nextInt();
+        for (int i = 0; i < chromosomesCount; i++) newChromosomes[i] = RANDOM.nextInt();
 
-        return new Genome(newChromosomes);
+        return new Genome(newChromosomes, RANDOM.nextInt());
     }
 
     public static int[] crossing(int[] chromosomes1, int[] chromosomes2, float percentFirst) {

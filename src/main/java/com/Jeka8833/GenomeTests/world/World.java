@@ -2,21 +2,14 @@ package com.Jeka8833.GenomeTests.world;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 public class World implements Serializable {
     private static final Logger LOGGER = LogManager.getLogger(World.class);
-    public static final ExecutorService THREAD_POOL = Executors.newVirtualThreadPerTaskExecutor();
-    private int threadCount = 1;
+    private final ThreadChunkManager<World> chunkManager;
 
     private int tickCount = 0;
 
@@ -39,27 +32,25 @@ public class World implements Serializable {
             map[i] = new Cell(this, i % width, i / width);
 
         generator.create(this);
+
+        chunkManager = new ThreadChunkManager<>(0, width, this, (ThreadChunkManager.Chunk<World>) (world, from, to) -> {
+            int start = from * height;
+            int end = to * height;
+
+            try {
+                for (int i = start; i < end; i++) world.map[i].tick();
+
+                generator.endChunk(world, from, to);
+            } catch (Exception e) {
+                LOGGER.error("X chunk from: " + from + " to " + to + " has error:", e);
+            }
+        });
     }
 
     public void tick() throws InterruptedException {
         generator.preTick();
 
-        if (threadCount <= 1) {
-            new WorldRunnable(this, 0, map.length, null).run();
-        } else {
-            var lock = new CountDownLatch(threadCount);
-            for (int i = 0; i < threadCount; i++) {
-                int fromPos = (i * map.length) / threadCount;
-                int toPos = ((i + 1) * map.length) / threadCount;
-                var worldWorker = new WorldRunnable(this, fromPos, toPos, lock);
-
-                if (i >= threadCount - 1) // Check last iteration
-                    worldWorker.run();
-                else THREAD_POOL.execute(worldWorker);
-            }
-
-            lock.await(); // Wait to the end working all threads
-        }
+        chunkManager.start();
 
         generator.pastTick();
         tickCount++;
@@ -74,11 +65,11 @@ public class World implements Serializable {
     }
 
     public int getThreadCount() {
-        return threadCount;
+        return chunkManager.getThreads();
     }
 
     public void setThreadCount(int threadCount) {
-        this.threadCount = threadCount;
+        chunkManager.setThreads(threadCount);
     }
 
     public int getTickCount() {
@@ -101,28 +92,18 @@ public class World implements Serializable {
         return generator;
     }
 
+    @Nullable
     public Cell getCell(int x, int y) {
         int index = x + y * width;
         if (index < 0 || index >= map.length) return null;
         return map[index];
     }
 
+    @Nullable
     public Cell getShiftedCell(int x, int y, int shiftX, int shiftY) {
         x = (x + shiftX) % width;
         if (x < 0) x += width;
 
         return getCell(x, y + shiftY);
-    }
-
-    private record WorldRunnable(World world, int from, int to, CountDownLatch lock) implements Runnable {
-        @Override
-        public void run() {
-            try {
-                for (int i = from; i < to; i++) world.map[i].tick();
-            } catch (Exception e) {
-                LOGGER.error("Block from: " + from + " to " + to + " has error:", e);
-            }
-            if (lock != null) lock.countDown();
-        }
     }
 }

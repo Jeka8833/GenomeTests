@@ -1,14 +1,15 @@
 package com.Jeka8833.GenomeTests;
 
-import com.Jeka8833.GenomeTests.world.World;
-import io.github.bucket4j.Bandwidth;
-import io.github.bucket4j.Bucket;
+import com.Jeka8833.GenomeTests.testWorld.FrameManager;
+import com.Jeka8833.GenomeTests.world.visualize.ReplayOverlay;
+import com.Jeka8833.GenomeTests.world.visualize.Window;
+import com.Jeka8833.GenomeTests.world.visualize.WindowManager;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.time.Duration;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class Test {
     private static final ExecutorService threadPool = Executors.newCachedThreadPool();
@@ -20,9 +21,52 @@ public class Test {
     private static volatile int worldStatus = 0;
 
     private static Thread thread;
+    //static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
 
     public static void main(String[] args) throws InterruptedException {
-        Bandwidth bandwidth = Bandwidth.simple(60, Duration.ofMinutes(1)).withInitialTokens(0);
+        Window window = WindowManager.createWindow(null, new FrameManager());
+        try {
+            window.addLayer(new ReplayOverlay(Path.of("D:\\User\\Download\\World\\")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        while (!window.isClosed()) {
+            Thread.sleep(1000);
+        }
+
+       /* Thread thread1 = Thread.startVirtualThread(() -> {
+            for (int i = 0; i < 15; i++) {
+                try {
+                    System.out.println(System.currentTimeMillis());
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            thread1.interrupt();
+        }).start();
+        while (true) {
+            try {
+                System.out.println("Start join");
+                thread1.join();
+                System.out.println("End join");
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println("Interrupt join");
+            }
+        }
+*/
+
+       /* Bandwidth bandwidth = Bandwidth.simple(60, Duration.ofMinutes(1)).withInitialTokens(0);
 
         Bucket bucket = Bucket.builder().addLimit(bandwidth).build();
 
@@ -60,7 +104,7 @@ public class Test {
                 throw new RuntimeException(e);
             }
         });
-        System.out.println("Iterr: " + waitingEnd(60000));
+        System.out.println("Iterr: " + waitingEnd(60000));*/
     }
 
     public static boolean waitingEnd(long timeout) {

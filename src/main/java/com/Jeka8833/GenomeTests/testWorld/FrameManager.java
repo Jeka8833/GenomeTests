@@ -6,7 +6,7 @@ import com.Jeka8833.GenomeTests.testWorld.objects.Sheet;
 import com.Jeka8833.GenomeTests.testWorld.objects.Wood;
 import com.Jeka8833.GenomeTests.world.Cell;
 import com.Jeka8833.GenomeTests.world.CellLayers;
-import com.Jeka8833.GenomeTests.world.visualize.FormLayerManager;
+import com.Jeka8833.GenomeTests.world.visualize.FormLayer;
 import com.Jeka8833.GenomeTests.world.visualize.Window;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBEasyFont;
@@ -22,7 +22,7 @@ import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
 import static org.lwjgl.opengl.GL11.glEnableClientState;
 import static org.lwjgl.opengl.GL15.*;
 
-public class FrameManager implements FormLayerManager {
+public class FrameManager implements FormLayer {
 
     private static final int vertices = 4;
     private static final int vertex_size = 2;
@@ -38,10 +38,14 @@ public class FrameManager implements FormLayerManager {
                 DoubleBuffer xBuffer = BufferUtils.createDoubleBuffer(1);
                 DoubleBuffer yBuffer = BufferUtils.createDoubleBuffer(1);
                 glfwGetCursorPos(worldFrame.getId(), xBuffer, yBuffer);
-                float zoomWidth = worldFrame.aspect >= 1.0 ? worldFrame.zoom * worldFrame.aspect : worldFrame.zoom;
-                float zoomHeight = worldFrame.aspect >= 1.0 ? worldFrame.zoom : worldFrame.zoom * worldFrame.aspect;
-                int x = (int) (worldFrame.pos.x + (xBuffer.get(0) * zoomWidth) / worldFrame.getPosAndSize().z());
-                int y = (int) (worldFrame.pos.y + ((worldFrame.getPosAndSize().w() - yBuffer.get(0)) * zoomHeight) / worldFrame.getPosAndSize().w());
+
+                float aspect = (float) worldFrame.getWindowsSize().x() / worldFrame.getWindowsSize().y();
+                float zoomWidth = aspect >= 1.0 ? worldFrame.getZoom() * aspect : worldFrame.getZoom();
+                float zoomHeight = aspect >= 1.0 ? worldFrame.getZoom() : worldFrame.getZoom() * aspect;
+                int x = (int) (worldFrame.getUserPosition().x() + (xBuffer.get(0) * zoomWidth) / worldFrame.getWindowsSize().x());
+                int y = (int) (worldFrame.getUserPosition().y() +
+                        ((worldFrame.getWindowsSize().y() - yBuffer.get(0)) * zoomHeight) /
+                                worldFrame.getWindowsSize().y());
                 selectedCell = worldFrame.getWorld().getCell(x, y);
             }
         });
@@ -68,34 +72,49 @@ public class FrameManager implements FormLayerManager {
     }
 
     @Override
-    public void cellRender(Cell cell) {
-        if (cell.layers.isEmpty()) return;
-
-        for (CellLayers layer : cell.layers) {
-            if (layer instanceof Grass) {
-                glColor4f(0.36f, 0.27f, 0.17f, 0.5f);
-            } else if (layer instanceof Seed) {
-                glColor4f(1, 0, 1, 0.5f);
-            } else if (layer instanceof Sheet) {
-                glColor4f(0, 1, 0, 0.5f);
-            } else if (layer instanceof Wood) {
-                glColor4f(1, 0.5f, 0, 0.5f);
+    public void cellRender(Window window, Cell cell) {
+        for (CellLayers layer : cell.layers.toArray(CellLayers[]::new)) {
+            switch (layer) {
+                case Grass grass -> glColor4f(0.36f, 0.27f, 0.17f, grass.getColorBrightness());
+                case Seed seed -> glColor4f(1, 0, 1, 0.5f);
+                case Sheet sheet -> glColor4f(0, 1, 0, 0.5f);
+                case Wood wood -> glColor4f(1, 0.5f, 0, 0.5f);
+                case null, default -> {
+                    continue;
+                }
             }
+            glDrawArrays(GL_QUADS, 0, vertices);
         }
-        glDrawArrays(GL_QUADS, 0, vertices);
     }
 
     @Override
     public void postRender(Window worldFrame) {
-        if (selectedCell != null) {
-            StringBuilder stringBuilder = new StringBuilder();
-            if (selectedCell.layers.isEmpty()) return;
+        StringBuilder worldInfo = new StringBuilder();
+        worldInfo.append("Sun level: ").append(SimpleWorldGenerator.getSunLevel(worldFrame.getWorld().getTickCount()))
+                .append("\nTick: ").append(worldFrame.getWorld().getTickCount());
 
+        glPushMatrix();
+        // glScalef(2, 2, 1f);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        ByteBuffer charBuffer = BufferUtils.createByteBuffer(worldInfo.length() * 270);
+        int width = STBEasyFont.stb_easy_font_width(worldInfo.toString());
+        int quads = STBEasyFont.stb_easy_font_print(Math.max(0, worldFrame.getWindowsSize().x() - width),
+                0,
+                worldInfo.toString(), null, charBuffer);
+        glVertexPointer(2, GL_FLOAT, 16, charBuffer);
+        glDrawArrays(GL_QUADS, 0, quads * 4);
+        glPopMatrix();
+
+
+        if (selectedCell != null) {
+            StringBuilder cellInfo = new StringBuilder();
+            if (selectedCell.layers.isEmpty()) return;
+            cellInfo.append("Cell pos: ").append(selectedCell.x).append(" ").append(selectedCell.y).append("\n");
             for (CellLayers layer : selectedCell.layers) {
-                if (layer instanceof Grass) {
-                    stringBuilder.append("Layer: Grass\n");
+                if (layer instanceof Grass grass) {
+                    cellInfo.append("Layer: Grass\nEnergy: ").append(grass.getEnergy()).append("\n");
                 } else if (layer instanceof Seed seed) {
-                    stringBuilder.append("Layer: Seed\nGenome: ")
+                    cellInfo.append("Layer: Seed\nGenome: ")
                             .append(Arrays.stream(seed.getTreeLive().getGenome().chromosomes())
                                     .mapToObj(Integer::toHexString)
                                     .collect(Collectors.joining(", ")))
@@ -103,14 +122,14 @@ public class FrameManager implements FormLayerManager {
                             .append(seed.getTreeLive().getHeath()).append("\n");
 
                 } else if (layer instanceof Sheet sheet) {
-                    stringBuilder.append("Layer: Sheet\nGenome: ")
+                    cellInfo.append("Layer: Sheet\nGenome: ")
                             .append(Arrays.stream(sheet.getTreeLive().getGenome().chromosomes())
                                     .mapToObj(Integer::toHexString)
                                     .collect(Collectors.joining(", ")))
                             .append("\nStart Gen: ").append(sheet.getStartGen()).append("\nHeath: ")
                             .append(sheet.getTreeLive().getHeath()).append("\n");
                 } else if (layer instanceof Wood wood) {
-                    stringBuilder.append("Layer: Wood\nGenome: ")
+                    cellInfo.append("Layer: Wood\nGenome: ")
                             .append(Arrays.stream(wood.getTreeLive().getGenome().chromosomes())
                                     .mapToObj(Integer::toHexString)
                                     .collect(Collectors.joining(", ")))
@@ -122,20 +141,20 @@ public class FrameManager implements FormLayerManager {
             glPushMatrix();
             // glScalef(2, 2, 1f);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
-            ByteBuffer charBuffer = BufferUtils.createByteBuffer(stringBuilder.length() * 270);
-            int width = STBEasyFont.stb_easy_font_width(stringBuilder.toString());
-            int height = STBEasyFont.stb_easy_font_height(stringBuilder.toString());
-            int quads = STBEasyFont.stb_easy_font_print(Math.max(0, worldFrame.getPosAndSize().z() - width),
-                    Math.max(0, worldFrame.getPosAndSize().w() - height),
-                    stringBuilder.toString(), null, charBuffer);
-            glVertexPointer(2, GL_FLOAT, 16, charBuffer);
-            glDrawArrays(GL_QUADS, 0, quads * 4);
+            ByteBuffer charBuffer1 = BufferUtils.createByteBuffer(cellInfo.length() * 270);
+            int width1 = STBEasyFont.stb_easy_font_width(cellInfo.toString());
+            int height1 = STBEasyFont.stb_easy_font_height(cellInfo.toString());
+            int quads1 = STBEasyFont.stb_easy_font_print(Math.max(0, worldFrame.getWindowsSize().x() - width1),
+                    Math.max(0, worldFrame.getWindowsSize().y() - height1),
+                    cellInfo.toString(), null, charBuffer1);
+            glVertexPointer(2, GL_FLOAT, 16, charBuffer1);
+            glDrawArrays(GL_QUADS, 0, quads1 * 4);
             glPopMatrix();
         }
     }
 
     @Override
-    public void close() {
+    public void close(Window window) {
 
     }
 }

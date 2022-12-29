@@ -20,6 +20,8 @@ public class CommandProcessor {
                 .addSubcommand(new SaveCommand(worldManager))
                 .addSubcommand(new LoadCommand(worldManager))
                 .addSubcommand(new TickCommand(worldManager))
+                .addSubcommand(new RestartCommand(worldManager))
+                .addSubcommand(new RemoveCommand(worldManager))
                 .execute(args.length == 1 ? args[0].split(" ") : args);
     }
 

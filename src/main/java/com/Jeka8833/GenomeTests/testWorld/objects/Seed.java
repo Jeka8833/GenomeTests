@@ -1,38 +1,47 @@
 package com.Jeka8833.GenomeTests.testWorld.objects;
 
+import com.Jeka8833.GenomeTests.testWorld.Genome;
+import com.Jeka8833.GenomeTests.testWorld.SimpleWorldGenerator;
 import com.Jeka8833.GenomeTests.testWorld.TreeLive;
 import com.Jeka8833.GenomeTests.world.Cell;
 
+import java.util.Random;
+
 public class Seed extends TreeBlock {
+
+    private static final Random RANDOM = new Random();
 
     public Seed(TreeLive treeLive, int startGen) {
         super(treeLive, startGen);
     }
 
+    public Seed(Genome genome) {
+        super(new TreeLive(genome), genome.startIndex());
+    }
+
     @Override
     public void tick(Cell cell) {
-        if (cell.getLayer(Grass.class) != null) {
-            // The seed in grass
-
-            getTreeLive().addHeath(-1);
-
+        if (getTreeLive().isDead(cell.world)) {
             cell.layers.remove(this);
-            if (!getTreeLive().isDead()) getTreeLive().useGen(cell, this, getStartGen());
-        } else if (cell.layers.size() == 1) {
-            // The seed is falls or hangs from a tree.
 
-            if (getTreeLive().isDead()) {
-                cell.layers.remove(this);
-
-                Cell bottomCell = cell.world.getShiftedCell(cell.x, cell.y, 0, -1);
-                bottomCell.layers.add(this);
+            int move = Integer.signum(SimpleWorldGenerator.GROUND_LEVEL - 1 - cell.y);
+            if (move == 0) {
+                Genome newGenome = RANDOM.nextInt(101) <= 50 ?
+                        getTreeLive().getGenome().mutation(0.1f) : getTreeLive().getGenome();
+                TreeLive.newTree(newGenome).useGen(cell, newGenome.startIndex());
             } else {
-                getTreeLive().addHeath(-1);
+                if(move > 0) return;
+
+                Cell bottomCell = cell.world.getShiftedCell(cell.x, cell.y, 0, move);
+                if (bottomCell != null) {
+                    if (bottomCell.layers.isEmpty() ||
+                            (bottomCell.layers.size() == 1 && bottomCell.containsLayer(Grass.class))) {
+                        bottomCell.layers.add(this);
+                    }
+                }
             }
         } else {
-            // The seed are blocked by other things, it is dead.
-
-            cell.layers.remove(this);
+            getTreeLive().addHeath(-1);
         }
     }
 }

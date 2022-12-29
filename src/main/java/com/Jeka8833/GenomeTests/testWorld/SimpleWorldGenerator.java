@@ -9,21 +9,26 @@ import com.Jeka8833.GenomeTests.world.*;
 import com.Jeka8833.GenomeTests.world.visualize.WindowManager;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class SimpleWorldGenerator extends WorldGenerator {
+
+    private static final Random RANDOM = new Random();
 
     private static final int WORLD_WIDTH = 3000;
     private static final int WORLD_HEIGHT = 100;
 
     public static final int GROUND_LEVEL = 30;
-    private static final int START_POPULATION = 500;
+    private static final int START_POPULATION = 1000;
 
     private World world;
 
     private final WorldManager worldManager;
-    private final Genome[] bestGenomes;
+    private transient final Genome[] bestGenomes;
 
-    private final SortedSet<GenomeOrder> genomes = new TreeSet<>(Comparator.comparingInt(GenomeOrder::tick));
+    private int sameBlockTicks = 0;
+    private int lastBlockCount = 0;
+    private transient final ConcurrentSkipListSet<GenomeOrder> genomes = new ConcurrentSkipListSet<>(Comparator.comparingInt(GenomeOrder::tick));
 
     public SimpleWorldGenerator(WorldManager worldManager, Genome[] bestGenomes) {
         this.worldManager = worldManager;
@@ -36,99 +41,132 @@ public class SimpleWorldGenerator extends WorldGenerator {
         for (int x = 0; x < WORLD_WIDTH; x++) {
             for (int y = 0; y < GROUND_LEVEL; y++) {
                 Cell cell = world.getCell(x, y);
-                cell.layers.add(new Grass());
+                if (cell != null) cell.layers.add(new Grass());
             }
         }
-
-        Random random = new Random();
-/*
-        world.getCell(50, 50).layers.add(new Seed(TreeLive.newTree(null), random.nextInt(16)));
-        world.getCell(50, 48).layers.add(new Wood(TreeLive.newTree(null), random.nextInt(16)));
-        world.getCell(50, 47).layers.add(new Wood(TreeLive.newTree(null), random.nextInt(16)));
-        world.getCell(50, 46).layers.add(new Wood(TreeLive.newTree(null), random.nextInt(16)));
-        world.getCell(50, 45).layers.add(new Wood(TreeLive.newTree(null), random.nextInt(16)));
-        world.getCell(50, 44).layers.add(new Wood(TreeLive.newTree(null), random.nextInt(16)));
-*/
 
         for (int i = 0; i < START_POPULATION; i++) {
             int posX = (i * WORLD_WIDTH) / START_POPULATION;
             Cell cell = world.getCell(posX, GROUND_LEVEL - 1);
             if (cell != null) {
                 Genome genome;
-                if (random.nextInt(101) <= 70 || bestGenomes == null || bestGenomes.length == 0) {
-                    genome = null;
+                if (RANDOM.nextInt(101) <= 60 || bestGenomes == null || bestGenomes.length == 0) {
+                    genome = Genome.createGenome(16);
                 } else if (bestGenomes.length == 1) {
                     genome = bestGenomes[0];
                 } else {
-                    genome = bestGenomes[random.nextInt(bestGenomes.length)];
+                    genome = bestGenomes[RANDOM.nextInt(bestGenomes.length)];
                 }
-                cell.layers.add(new Seed(TreeLive.newTree(genome == null ? null : new TreeLive(genome)), random.nextInt(16)));
+                if (RANDOM.nextInt(101) <= 60) genome = genome.mutation(0.3f);
+                cell.layers.add(new Seed(genome));
             }
         }
     }
 
     @Override
-    public void preTick() {
+    public void preTick() throws InterruptedException {
+        int blocks = 0;
         boolean allDead = true;
         for (Cell cell : world.getMap()) {
-            if (cell.getLayer(Wood.class) != null || cell.getLayer(Seed.class) != null) {
+            if (!cell.layers.isEmpty()) blocks++;
+            if (allDead && (cell.containsLayer(Wood.class) || cell.containsLayer(Seed.class))) {
                 allDead = false;
-                break;
             }
         }
-        if (allDead) {
-            System.out.println("Last: " + genomes.last());
-            restart(worldManager, world,
-                    genomes.stream()
-                            .skip(genomes.size() - 2)
-                            .map(GenomeOrder::genome)
-                            .toArray(Genome[]::new));
+        if (lastBlockCount == blocks) {
+            sameBlockTicks++;
+        } else {
+            sameBlockTicks = 0;
+            lastBlockCount = blocks;
         }
+
+        if (sameBlockTicks > 2000) {
+            for (Cell cell : world.getMap()) {
+                Wood wood = cell.getLayer(Wood.class);
+                if (wood != null) wood.getTreeLive().addHeath(-100_000_000);
+            }
+        }
+
+        if (allDead) {
+            Thread.startVirtualThread(() -> {
+                try {
+                    if (genomes.isEmpty()) {
+                        restart(worldManager, world, null);
+                    } else {
+                        System.out.println("Last genom on world " + world.getName() + ": " + genomes.last());
+                        restart(worldManager, world,
+                                genomes.stream()
+                                        .skip(Math.max(0, genomes.size() - 2))
+                                        .map(GenomeOrder::genome)
+                                        .toArray(Genome[]::new));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            throw new InterruptedException();
+        }
+    }
+
+    @Override
+    public void endChunk(World world, int from, int to) {
+        int maxSunLevel = getSunLevel(world.getTickCount());
+
+        Cell[] worldCells = world.getMap();
+        for (int x = from; x < to; x++) {
+            int level = maxSunLevel;
+            for (int y = WORLD_HEIGHT - 1; y >= GROUND_LEVEL; y--) {
+                if (level <= 0) continue;
+
+                for (CellLayers layer : worldCells[x + y * WORLD_WIDTH].layers) {
+                    if (layer instanceof Wood) {
+                        level -= 3;
+                    } else if (layer instanceof Sheet sheet) {
+                        if (level > 0) sheet.getTreeLive().addHeath(Math.min(7, level));
+
+                        level -= 10;
+                    } else if (layer instanceof Seed) {
+                        level -= 1;
+                    }
+                }
+            }
+
+            if (level > 0) {
+                Grass firstLayer = world.getCell(x, GROUND_LEVEL - 1).getLayer(Grass.class);
+                if (firstLayer != null) firstLayer.addEnergy(level);
+            }
+
+            for (int y = 1; y < GROUND_LEVEL; y++) {
+                Grass.soilErosion(world.getCell(x, y),
+                        world.getShiftedCell(x, y, 1, 0),
+                        world.getShiftedCell(x, y, 0, -1));
+            }
+        }
+    }
+
+    public static int getSunLevel(int ticks) {
+        return 6 + (int) ((1 + Math.cos(2 * Math.PI * ticks / 500)) * 5);
     }
 
     @Override
     public void pastTick() {
-        int maxSunLevel = 16;
-
-        Cell[] worldCells = world.getMap();
-        for (int x = 0; x < WORLD_WIDTH; x++) {
-            int level = maxSunLevel;
-            for (int y = GROUND_LEVEL; y < WORLD_HEIGHT; y++) {
-                for (CellLayers layer : worldCells[x + y * WORLD_WIDTH].layers) {
-                    if (layer instanceof Wood wood) {
-                        level -= 3;
-
-                        if (wood.getTreeLive().isDead())
-                            genomes.add(new GenomeOrder(world.getTickCount(), wood.getTreeLive().getGenome()));
-                    } else if (layer instanceof Sheet sheet) {
-                        if (level > 0) sheet.getTreeLive().addHeath(Math.min(7, level));
-                        level -= 10;
-
-                        if (sheet.getTreeLive().isDead())
-                            genomes.add(new GenomeOrder(world.getTickCount(), sheet.getTreeLive().getGenome()));
-                    } else if (layer instanceof Seed seed) {
-                        level -= 1;
-
-                        if (seed.getTreeLive().isDead())
-                            genomes.add(new GenomeOrder(world.getTickCount(), seed.getTreeLive().getGenome()));
-                    }
-                }
-            }
-        }
     }
 
-    public SortedSet<GenomeOrder> getGenomes() {
+    public ConcurrentSkipListSet<GenomeOrder> getGenomes() {
         return genomes;
     }
 
-    public static void restart(WorldManager worldManager, World world, Genome[] bestGenomes) {
-        worldManager.getSimulation(world).stop();
+    public static void restart(WorldManager worldManager, World world, Genome[] bestGenomes) throws InterruptedException {
+        worldManager.getSimulation(world).stopAndWait();
         worldManager.remove(world);
         World newWorld = createWorld(worldManager,
                 Integer.parseInt(world.getName().split("-")[1]) + 1, bestGenomes);
         WindowManager.getWindows().stream()
                 .filter(window -> window.getWorld().equals(world))
-                .forEach(window -> window.setWorld(newWorld));
+                .forEach(window -> {
+                    window.setWorld(newWorld);
+                    window.setWindowTitle(newWorld.getName());
+                });
         WorldSimulation simulation = worldManager.add(newWorld);
         simulation.start();
     }
@@ -140,7 +178,7 @@ public class SimpleWorldGenerator extends WorldGenerator {
         return world;
     }
 
-    private record GenomeOrder(int tick, Genome genome) {
+    public record GenomeOrder(int tick, Genome genome) {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
