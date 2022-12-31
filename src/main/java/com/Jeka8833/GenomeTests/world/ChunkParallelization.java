@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
-public class ThreadChunkManager<V> implements Serializable {
+public class ChunkParallelization<V> implements Serializable {
 
     private int threads = 1;
     private int from = 0;
@@ -13,14 +13,14 @@ public class ThreadChunkManager<V> implements Serializable {
     private V sendValue;
     private @Nullable Chunk<V> chunkCallback;
 
-    public ThreadChunkManager() {
+    public ChunkParallelization() {
     }
 
-    public ThreadChunkManager(int from, int to, V sendValue, @NotNull Chunk<V> chunkCallback) {
+    public ChunkParallelization(int from, int to, V sendValue, @NotNull Chunk<V> chunkCallback) {
         this(1, from, to, sendValue, chunkCallback);
     }
 
-    public ThreadChunkManager(int threads, int from, int to, V sendValue, @NotNull Chunk<V> chunkCallback) {
+    public ChunkParallelization(int threads, int from, int to, V sendValue, @NotNull Chunk<V> chunkCallback) {
         this.threads = threads;
         this.from = from;
         this.to = to;

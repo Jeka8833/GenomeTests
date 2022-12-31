@@ -4,6 +4,7 @@ import com.Jeka8833.GenomeTests.testWorld.Genome;
 import com.Jeka8833.GenomeTests.testWorld.SimpleWorldGenerator;
 import com.Jeka8833.GenomeTests.testWorld.TreeLive;
 import com.Jeka8833.GenomeTests.world.Cell;
+import com.Jeka8833.GenomeTests.world.World;
 
 import java.util.Random;
 
@@ -15,20 +16,20 @@ public class Seed extends TreeBlock {
         super(treeLive, startGen);
     }
 
-    public Seed(Genome genome) {
-        super(new TreeLive(genome), genome.startIndex());
+    public Seed(Genome genome, World world) {
+        super(new TreeLive(genome, world), genome.startIndex());
     }
 
     @Override
     public void tick(Cell cell) {
-        if (getTreeLive().isDead(cell.world)) {
+        if (getTreeLive().isDead()) {
             cell.layers.remove(this);
 
             int move = Integer.signum(SimpleWorldGenerator.GROUND_LEVEL - 1 - cell.y);
             if (move == 0) {
-                Genome newGenome = RANDOM.nextInt(101) <= 50 ?
-                        getTreeLive().getGenome().mutation(0.1f) : getTreeLive().getGenome();
-                TreeLive.newTree(newGenome).useGen(cell, newGenome.startIndex());
+                Genome newGenome = RANDOM.nextBoolean() ?
+                        getTreeLive().getGenome().mutation(4) : getTreeLive().getGenome();
+                TreeLive.newTree(newGenome, getTreeLive().getWorld()).useGen(cell, newGenome.startIndex());
             } else {
                 if(move > 0) return;
 

@@ -6,19 +6,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class SynchronizeSimulation implements Serializable {
-
+public class SimulationSynchronizer implements Serializable {
     private transient final List<WorldSimulation> simulations = new ArrayList<>();
-    private transient Bucket bestRateLimitWorld;
-
-    private transient final AtomicInteger threadsReady = new AtomicInteger();
-
-    private transient volatile int needReady = 0;
-
     private transient final Object LOCK = new Object();
+    private transient Bucket worldSpeed;
 
+    private transient volatile int readyThreads = 0;
+    private transient volatile int needReady = 0;
 
     public void registerWorld(WorldSimulation simulation) {
         simulations.add(simulation);
@@ -31,29 +26,34 @@ public class SynchronizeSimulation implements Serializable {
     }
 
     public void tick() throws InterruptedException {
-        if (threadsReady.incrementAndGet() >= needReady) {
-            LOCK.notifyAll();
-        } else {
-            LOCK.wait(30_000);
-            if (threadsReady.get() < needReady) LOCK.notifyAll();
+        synchronized (LOCK) {
+            readyThreads++;
+            if (readyThreads >= needReady) {
+                readyThreads = 0;
+                LOCK.notifyAll();
+            } else {
+                LOCK.wait(30_000);
+            }
         }
 
-        if (bestRateLimitWorld != null) bestRateLimitWorld.asBlocking().consume(1);
+        if (worldSpeed != null) worldSpeed.asBlocking().consume(1);
     }
 
     public void recalculateSynchronize() {
         int needReadyCalculated = (int) simulations.stream()
                 .filter(WorldSimulation::isRun)
                 .count();
-        bestRateLimitWorld = simulations.stream()
+        worldSpeed = simulations.stream()
                 .filter(simulation -> simulation.getLimitTickPerMinute() > 0)
                 .max(Comparator.comparingInt(WorldSimulation::getLimitTickPerMinute))
                 .map(WorldSimulation::getRateLimit)
                 .orElse(null);
 
-        // Fast replacement block
-        needReady = needReadyCalculated;
-        threadsReady.set(0);
-        LOCK.notifyAll();
+        // Fast execution block
+        synchronized (LOCK) {
+            needReady = needReadyCalculated;
+            readyThreads = 0;
+            LOCK.notifyAll();
+        }
     }
 }

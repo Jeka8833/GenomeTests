@@ -83,6 +83,9 @@ public class Window {
         });
         glfwSetWindowSizeCallback(window, (window1, windowWidth, windowHeight) -> {
             windowsSize.set(windowWidth, windowHeight);
+
+            glfwMakeContextCurrent(window);
+            GL.setCapabilities(capabilities);
             glViewport(0, 0, windowWidth, windowHeight);
         });
 

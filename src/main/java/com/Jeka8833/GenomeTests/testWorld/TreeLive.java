@@ -4,85 +4,70 @@ import com.Jeka8833.GenomeTests.testWorld.objects.*;
 import com.Jeka8833.GenomeTests.world.Cell;
 import com.Jeka8833.GenomeTests.world.World;
 import org.intellij.lang.annotations.MagicConstant;
+import org.jetbrains.annotations.Range;
 
 import java.io.Serializable;
-import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TreeLive implements Serializable {
     // 0000 0000  0000 0000  0000 0000  0000 0000
     //
     // 00 - (00 - value != CellY; 01 - value < CellY; 10 - value > CellY; 11 - value == CellY) - condition1
-    // 00 - (00 - value != Health; 01 - value < Health; 10 - value > Health; 11 - value == Health) - condition2
-    //
-    // 0 - Invert condition1
-    // 0 - Invert condition2
-    // 00 - (00 - condition1 != condition2; 01 - condition1 || condition2;
-    //       10 - condition1 && condition2; 11 - condition1 == condition2)
-    //
-    //
     // 0 - If condition is true, then jump to gen
     // 0 - If condition is true, then create new Tree Blocks
-    // 0 - Always jump to gen
-    // 0 - Always create new Tree Blocks
     //
+    // 00 - Block count
     // 0 - Jump to gen bit 1
     // 0 - Jump to gen bit 2
+    //
     // 0 - Jump to gen bit 3
     // 0 - Jump to gen bit 4
-    //
-    //
     // 0 - Jump to gen bit 5
     // 0 - Left
+    //
     // 0 - Top
     // 0 - Right
-    //
     // 0 - Bottom
-    // 0 - Create Seed  (Sets only air in wood)
-    // 0 - Create Sheet (Sets only air in wood)
-    // 0 - Create Wood  (Root - In ground)
     //
+    // 0 - Priority Seed
+    // 00 - Create Seed  (Sets only air in wood)
+    //
+    // 0 - Priority Sheet
+    // 00 - Create Sheet (Sets only air in wood)
+    //
+    // 0 - Priority Wood
+    // 00 - Create Wood  (Root - In ground)
     //
     // 0000 0000 - Value
 
-    // format:off
-    private static final int PARAM_CONDITION1 = 0b1100_0000__0000_0000__0000_0000__0000_0000;    // Mask
-    private static final int PARAM_CONDITION2 = 0b0011_0000__0000_0000__0000_0000__0000_0000;    // Mask
+    private static final int PARAM_CONDITION = 0b1100_0000__0000_0000__0000_0000__0000_0000;    // Mask
+    private static final int PARAM_CONDITION_JUMP = 0b0010_0000__0000_0000__0000_0000__0000_0000;
+    private static final int PARAM_CONDITION_CREATE = 0b0001_0000__0000_0000__0000_0000__0000_0000;
 
-    private static final int PARAM_INVERT_C1 = 0b0000_1000__0000_0000__0000_0000__0000_0000;
-    private static final int PARAM_INVERT_C2 = 0b0000_0100__0000_0000__0000_0000__0000_0000;
-    private static final int PARAM_OPERATOR = 0b0000_0011__0000_0000__0000_0000__0000_0000;    // Mask
+    private static final int PARAM_BLOCK_COUNT = 0b0000_1100__0000_0000__0000_0000__0000_0000;  // Mask
+    private static final int PARAM_JUMP = 0b0000_0011__1110_0000__0000_0000__0000_0000;    // Mask
+    private static final int PARAM_CREATE_RIGHT = 0b0000_0000__0001_0000__0000_0000__0000_0000;
 
-    private static final int PARAM_C_JUMP = 0b0000_0000__1000_0000__0000_0000__0000_0000;
-    private static final int PARAM_C_CREATE = 0b0000_0000__0100_0000__0000_0000__0000_0000;
-    private static final int PARAM_A_JUMP = 0b0000_0000__0010_0000__0000_0000__0000_0000;
-    private static final int PARAM_A_CREATE = 0b0000_0000__0001_0000__0000_0000__0000_0000;
-
-    private static final int PARAM_JUMP = 0b0000_0000__0000_1111__1000_0000__0000_0000;    // Mask
-
-    private static final int PARAM_CREATE_SIDES = 0b0000_0000__0000_0000__0111_1000__0000_0000;    // Mask
-    private static final int PARAM_CREATE_RIGHT = 0b0000_0000__0000_0000__0100_0000__0000_0000;
-    private static final int PARAM_CREATE_LEFT = 0b0000_0000__0000_0000__0010_0000__0000_0000;
-    private static final int PARAM_CREATE_TOP = 0b0000_0000__0000_0000__0001_0000__0000_0000;
-
-    private static final int PARAM_CREATE_BOTTOM = 0b0000_0000__0000_0000__0000_1000__0000_0000;
-    private static final int PARAM_CREATE_TYPE = 0b0000_0000__0000_0000__0000_0111__0000_0000;    // Mask
-    private static final int PARAM_CREATE_SEED = 0b0000_0000__0000_0000__0000_0100__0000_0000;
-    private static final int PARAM_CREATE_SHEET = 0b0000_0000__0000_0000__0000_0010__0000_0000;
-    private static final int PARAM_CREATE_WOOD = 0b0000_0000__0000_0000__0000_0001__0000_0000;
+    private static final int PARAM_CREATE_LEFT = 0b0000_0000__0000_1000__0000_0000__0000_0000;
+    private static final int PARAM_CREATE_TOP = 0b0000_0000__0000_0100__0000_0000__0000_0000;
+    private static final int PARAM_CREATE_BOTTOM = 0b0000_0000__0000_0010__0000_0000__0000_0000;
+    private static final int PARAM_COUNT_SEED = 0b0000_0000__0000_0001__1100_0000__0000_0000;
+    private static final int PARAM_COUNT_SHEET = 0b0000_0000__0000_0000__0011_1000__0000_0000;
+    private static final int PARAM_COUNT_WOOD = 0b0000_0000__0000_0000__0000_0111__0000_0000;
 
     private static final int PARAM_VALUE = 0b0000_0000__0000_0000__0000_0000__1111_1111;    // Mask
-    // format:on
-
-    private static final Comparator<TreeLive.Block> comparator = Comparator.nullsLast(Comparator.comparing(Block::priority));
-    private static final Random RANDOM = new Random();
 
     private final Genome genome;
     private volatile boolean isDead = false;
     private final AtomicInteger heath = new AtomicInteger();
 
-    public TreeLive(final Genome genome) {
+    private final World world;
+    private final int startTick;
+
+    public TreeLive(final Genome genome, World world) {
         this.genome = genome;
+        this.world = world;
+        startTick = world.getTickCount();
     }
 
     public void addHeath(int heath) {
@@ -93,10 +78,22 @@ public class TreeLive implements Serializable {
         return heath.get();
     }
 
-    public boolean isDead(World world) {
+    public boolean isDead() {
         if (isDead) return true;
 
-        if (heath.get() <= 0) isDead = true;
+        if (heath.get() <= 0 || world.getTickCount() - startTick > 2000) isDead = true;
+
+        if (isDead && world != null && world.getGenerator() instanceof SimpleWorldGenerator generator) {
+            generator.getGenomes().add(new SimpleWorldGenerator.GenomeOrder(world.getTickCount(), getGenome()));
+        }
+        return isDead;
+    }
+
+    public boolean addHeathAndCheckDead(int addValue) {
+        if (isDead) return true;
+
+        int heath = this.heath.addAndGet(addValue);
+        if (heath <= 0 || world.getTickCount() - startTick > 2000) isDead = true;
 
         if (isDead && world != null && world.getGenerator() instanceof SimpleWorldGenerator generator) {
             generator.getGenomes().add(new SimpleWorldGenerator.GenomeOrder(world.getTickCount(), getGenome()));
@@ -113,183 +110,153 @@ public class TreeLive implements Serializable {
     }
 
     public void useGen(Cell cell, int startGenome) {
-        int gen = getGenome().chromosomes()[Math.abs(startGenome) % genome.chromosomes().length];
+        int chromosome = getGenome().chromosomes()[Math.abs(startGenome) % genome.chromosomes().length];
 
-        boolean condition1 = checkCondition(gen, cell.y, PARAM_CONDITION1, PARAM_INVERT_C1);
-        boolean condition2 = checkCondition(gen, Math.min(PARAM_VALUE, heath.get()), PARAM_CONDITION2, PARAM_INVERT_C2);
+        boolean condition = checkCondition(chromosome, cell.y);
 
-        int operator = (gen & PARAM_OPERATOR) >>> 24;
-        boolean conditionState = switch (operator) {
-            case 0:
-                yield condition1 != condition2;
-            case 1:
-                yield condition1 || condition2;
-            case 2:
-                yield condition1 && condition2;
-            case 3:
-                yield condition1 == condition2;
-            default:
-                throw new IllegalStateException("Unexpected value: " + operator);
-        };
+        boolean activateJump = (chromosome & PARAM_CONDITION_JUMP) != PARAM_CONDITION_JUMP;
+        boolean activateCreate = (chromosome & PARAM_CONDITION_CREATE) != PARAM_CONDITION_CREATE;
+        if (!activateJump) activateJump = condition;
+        if (!activateCreate) activateCreate = condition;
 
-        boolean activateJump = (gen & PARAM_A_JUMP) == PARAM_A_JUMP;
-        boolean activateCreate = (gen & PARAM_A_CREATE) == PARAM_A_CREATE;
-        if (conditionState && (gen & PARAM_C_JUMP) == PARAM_C_JUMP) activateJump = true;
-        if (conditionState && (gen & PARAM_C_CREATE) == PARAM_C_CREATE) activateCreate = true;
+        int nextGenIndex = activateJump ? (chromosome & PARAM_JUMP) >>> 21 : startGenome + 1;
 
-        int nextGenIndex = activateJump ? (gen & PARAM_JUMP) >>> 15 : startGenome;
-
-        if (activateCreate) setBlocks(gen, cell, this, nextGenIndex, 2);
+        if (activateCreate) {
+            new BlockCreator(cell, chromosome, world.getTickCount() - startTick > 10).placeBlock(this, nextGenIndex);
+        }
     }
 
-    public static TreeLive newTree(Genome parents) {
-        var newTree = new TreeLive(parents == null ? Genome.createGenome(16) : parents);
+    public static TreeLive newTree(Genome parents, World world) {
+        var newTree = new TreeLive(parents == null ? Genome.createGenome(16) : parents, world);
 
-        newTree.addHeath(1000 + RANDOM.nextInt(1001)); // 1000-2000 HP
+        newTree.addHeath(1000); // 1000 HP
         return newTree;
     }
 
-    private static void setBlocks(int gen, Cell cell, TreeLive live,
-                                  int startGen,
-                                  int maxCount) {
-        if ((gen & PARAM_CREATE_SIDES) == 0 || (gen & PARAM_CREATE_TYPE) == 0) return;
-        var blocks = new Block[]{
-                Block.createBlock(cell, gen, PARAM_CREATE_LEFT),
-                Block.createBlock(cell, gen, PARAM_CREATE_RIGHT),
-                Block.createBlock(cell, gen, PARAM_CREATE_TOP),
-                Block.createBlock(cell, gen, PARAM_CREATE_BOTTOM)
-        };
-        for (int i = 0; i < maxCount; i++) {
-            Arrays.sort(blocks, comparator);
-            if (blocks[0] == null || blocks[0].isUsed()) return;
+    private boolean checkCondition(int chromosome, int value) {
+        int condition = (chromosome & PARAM_CONDITION) >>> 30;
+        int checkedValue = chromosome & PARAM_VALUE;
 
-            int used = blocks[0].useBlock(live, startGen);
-            for (int j = 1; j < 4; j++) {
-                if (blocks[j] == null || blocks[j].isUsed()) break;
-                switch (used) {
-                    case PARAM_CREATE_WOOD -> blocks[j].downPriorityWood();
-                    case PARAM_CREATE_SHEET -> blocks[j].downPrioritySheet();
-                    case PARAM_CREATE_SEED -> blocks[j].downPrioritySeed();
+        return switch (condition) {
+            case 0 -> value != checkedValue;
+            case 1 -> value < checkedValue;
+            case 2 -> value > checkedValue;
+            case 3 -> value == checkedValue;
+            default -> false;
+        };
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    private static class BlockCreator {
+        private final Cell cell;
+        private final int chromosome;
+
+        private @Range(from = 0, to = 0b111) int wood;
+        private @Range(from = 0, to = 0b111) int sheet;
+        private @Range(from = 0, to = 0b111) int seed;
+
+        private BlockCreator(Cell cell, int chromosome, boolean allowSeeds) {
+            this.cell = cell;
+            this.chromosome = chromosome;
+            wood = (chromosome & PARAM_COUNT_WOOD) >> 8;
+            sheet = (chromosome & PARAM_COUNT_SHEET) >> 11;
+            seed = allowSeeds ? (chromosome & PARAM_COUNT_SEED) >> 14 : 0;
+        }
+
+        public void placeBlock(TreeLive tree, int nextGenIndex) {
+            int blockCount = (chromosome & PARAM_BLOCK_COUNT) >> 26;
+            for (int i = 0; i < blockCount; i++) {
+                int nextBlock = nextBlockType();
+                if (nextBlock == 0) return;
+
+                if ((chromosome & PARAM_CREATE_TOP) == PARAM_CREATE_TOP) {
+                    Cell next = cell.world.getShiftedCell(cell.x, cell.y, 0, 1);
+                    if (isAllowPlace(cell, next, nextBlock)) {
+                        downPriorityAndPlace(tree, next, nextGenIndex, nextBlock);
+                        continue;
+                    }
+                }
+                if ((chromosome & PARAM_CREATE_RIGHT) == PARAM_CREATE_RIGHT) {
+                    Cell next = cell.world.getShiftedCell(cell.x, cell.y, 1, 0);
+                    if (isAllowPlace(cell, next, nextBlock)) {
+                        downPriorityAndPlace(tree, next, nextGenIndex, nextBlock);
+                        continue;
+                    }
+                }
+                if ((chromosome & PARAM_CREATE_LEFT) == PARAM_CREATE_LEFT) {
+                    Cell next = cell.world.getShiftedCell(cell.x, cell.y, -1, 0);
+                    if (isAllowPlace(cell, next, nextBlock)) {
+                        downPriorityAndPlace(tree, next, nextGenIndex, nextBlock);
+                        continue;
+                    }
+                }
+                if ((chromosome & PARAM_CREATE_BOTTOM) == PARAM_CREATE_BOTTOM) {
+                    Cell next = cell.world.getShiftedCell(cell.x, cell.y, 0, -1);
+                    if (isAllowPlace(cell, next, nextBlock)) {
+                        downPriorityAndPlace(tree, next, nextGenIndex, nextBlock);
+                        continue;
+                    }
+                }
+                switch (nextBlock) {
+                    case PARAM_COUNT_WOOD -> wood = 0;
+                    case PARAM_COUNT_SHEET -> sheet = 0;
+                    case PARAM_COUNT_SEED -> seed = 0;
+                }
+                i--;
+            }
+        }
+
+        @MagicConstant(flags = {0, PARAM_COUNT_WOOD, PARAM_COUNT_SHEET, PARAM_COUNT_SEED})
+        private int nextBlockType() {
+            int max = Math.max(Math.max(calcPriority(wood), calcPriority(sheet)), calcPriority(seed));
+            if (max == 0) return 0;
+
+            if (max == calcPriority(wood)) return PARAM_COUNT_WOOD;
+            if (max == calcPriority(sheet)) return PARAM_COUNT_SHEET;
+            return PARAM_COUNT_SEED;
+        }
+
+        private void downPriorityAndPlace(TreeLive tree, Cell cell, int nextGenIndex, int blockType) {
+            switch (blockType) {
+                case PARAM_COUNT_WOOD -> {
+                    cell.layers.add(new Wood(tree, nextGenIndex));
+                    wood = downPriority(wood);
+                }
+                case PARAM_COUNT_SHEET -> {
+                    cell.layers.add(new Sheet(tree, nextGenIndex));
+                    sheet = downPriority(sheet);
+                }
+                case PARAM_COUNT_SEED -> {
+                    cell.layers.add(new Seed(tree, nextGenIndex));
+                    seed = downPriority(seed);
                 }
             }
         }
-    }
 
-    // TODO: Bugged external annotations, can be removed if needed
-    private static boolean checkCondition(int gen, int checkedValue,
-                                          @MagicConstant(flags = {PARAM_CONDITION1, PARAM_CONDITION2}) int paramCondition,
-                                          @MagicConstant(flags = {PARAM_INVERT_C1, PARAM_INVERT_C2}) int paramInvertC) {
-        int value = gen & PARAM_VALUE;
-        checkedValue &= PARAM_VALUE;
-
-        int condition = switch (paramCondition) {
-            case PARAM_CONDITION1:
-                yield (gen & PARAM_CONDITION1) >>> 30;
-            case PARAM_CONDITION2:
-                yield (gen & PARAM_CONDITION2) >>> 28;
-            default:
-                throw new IllegalStateException("Unexpected value: " + paramCondition);
-        };
-
-        boolean state = switch (condition) {
-            case 0:
-                yield value != checkedValue;
-            case 1:
-                yield value < checkedValue;
-            case 2:
-                yield value > checkedValue;
-            case 3:
-                yield value == checkedValue;
-            default:
-                throw new IllegalStateException("Unexpected value: " + condition);
-        };
-        return ((gen & paramInvertC) == paramInvertC) != state;
-    }
-
-    private static class Block {
-        private static final int USED_VALUE = 100;
-
-        private final Cell cell;
-        private int wood;
-        private int sheet;
-        private int seed;
-
-        private Block(Cell cell, int wood, int sheet, int seed) {
-            this.cell = cell;
-            this.wood = wood;
-            this.sheet = sheet;
-            this.seed = seed;
+        @Range(from = 0, to = 0b111)
+        private static int calcPriority(@Range(from = 0, to = 0b111) int value) {
+            return (value & 0b11) > 0 ? value : 0;
         }
 
-        private int priority() {
-            return wood + sheet + seed;
+        @Range(from = 0, to = 0b110)
+        private static int downPriority(@Range(from = 0, to = 0b111) int value) {
+            return (value & 0b11) > 0 ? value - 1 : 0;
         }
 
-        public void downPriorityWood() {
-            wood++;
-        }
+        private static boolean isAllowPlace(Cell current, Cell next, int blockType) {
+            // Only air or ground
+            if (next == null || !(next.layers.isEmpty() ||
+                    (next.layers.size() == 1 && next.containsLayer(Grass.class)))) return false;
 
-        public void downPrioritySheet() {
-            sheet++;
-        }
-
-        public void downPrioritySeed() {
-            seed++;
-        }
-
-        private int useBlock(TreeLive tree, int startGen) {
-            int minValue = Math.min(Math.min(wood, sheet), seed);
-            if (minValue == wood) {
-                cell.layers.add(new Wood(tree, startGen));
-                wood = sheet = seed = USED_VALUE;
-                return PARAM_CREATE_WOOD;
-            } else if (minValue == sheet) {
-                cell.layers.add(new Sheet(tree, startGen));
-                wood = sheet = seed = USED_VALUE;
-                return PARAM_CREATE_SHEET;
-            } else {
-                cell.layers.add(new Seed(tree, startGen));
-                wood = sheet = seed = USED_VALUE;
-                return PARAM_CREATE_SEED;
-            }
-        }
-
-        public boolean isUsed() {
-            return wood >= USED_VALUE && sheet >= USED_VALUE && seed >= USED_VALUE;
-        }
-
-        public Cell getCell() {
-            return cell;
-        }
-
-        private static Block createBlock(Cell cell, int gen,
-                                         @MagicConstant(flags = {PARAM_CREATE_LEFT, PARAM_CREATE_RIGHT, PARAM_CREATE_TOP, PARAM_CREATE_BOTTOM})
-                                         int side) {
-            if ((gen & side) != side) return null;
-
-            Cell nextCell = switch (side) {
-                case PARAM_CREATE_LEFT -> cell.world.getShiftedCell(cell.x, cell.y, -1, 0);
-                case PARAM_CREATE_RIGHT -> cell.world.getShiftedCell(cell.x, cell.y, 1, 0);
-                case PARAM_CREATE_TOP -> cell.world.getShiftedCell(cell.x, cell.y, 0, 1);
-                case PARAM_CREATE_BOTTOM -> cell.world.getShiftedCell(cell.x, cell.y, 0, -1);
-                default -> null;
+            return switch (blockType) {
+                case PARAM_COUNT_WOOD -> true;
+                case PARAM_COUNT_SHEET -> current.containsLayer(Wood.class) && next.layers.isEmpty();
+                case PARAM_COUNT_SEED -> current.containsLayer(Wood.class) && next.layers.isEmpty();
+                default -> false;
             };
-
-            if (nextCell == null) return null;
-
-            // Next cell is empty
-            if (!(nextCell.layers.isEmpty() || (nextCell.layers.size() == 1 && nextCell.containsLayer(Grass.class))))
-                return null;
-
-            var block = new Block(nextCell,
-                    (gen & PARAM_CREATE_WOOD) == PARAM_CREATE_WOOD ? 0 : USED_VALUE,
-                    (gen & PARAM_CREATE_SHEET) == PARAM_CREATE_SHEET &&
-                            cell.containsLayer(Wood.class) && nextCell.layers.isEmpty() ? 0 : USED_VALUE,
-                    (gen & PARAM_CREATE_SEED) == PARAM_CREATE_SEED &&
-                            cell.containsLayer(Wood.class) ? 0 : USED_VALUE);
-            if (block.priority() <= 0) return null;
-
-            return block;
         }
     }
 }

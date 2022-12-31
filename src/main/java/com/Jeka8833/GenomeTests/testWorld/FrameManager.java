@@ -5,7 +5,7 @@ import com.Jeka8833.GenomeTests.testWorld.objects.Seed;
 import com.Jeka8833.GenomeTests.testWorld.objects.Sheet;
 import com.Jeka8833.GenomeTests.testWorld.objects.Wood;
 import com.Jeka8833.GenomeTests.world.Cell;
-import com.Jeka8833.GenomeTests.world.CellLayers;
+import com.Jeka8833.GenomeTests.world.Layer;
 import com.Jeka8833.GenomeTests.world.visualize.FormLayer;
 import com.Jeka8833.GenomeTests.world.visualize.Window;
 import org.lwjgl.BufferUtils;
@@ -18,8 +18,6 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
-import static org.lwjgl.opengl.GL11.glEnableClientState;
 import static org.lwjgl.opengl.GL15.*;
 
 public class FrameManager implements FormLayer {
@@ -73,7 +71,7 @@ public class FrameManager implements FormLayer {
 
     @Override
     public void cellRender(Window window, Cell cell) {
-        for (CellLayers layer : cell.layers.toArray(CellLayers[]::new)) {
+        for (Layer layer : cell.layers.toArray(Layer[]::new)) {
             switch (layer) {
                 case Grass grass -> glColor4f(0.36f, 0.27f, 0.17f, grass.getColorBrightness());
                 case Seed seed -> glColor4f(1, 0, 1, 0.5f);
@@ -110,7 +108,7 @@ public class FrameManager implements FormLayer {
             StringBuilder cellInfo = new StringBuilder();
             if (selectedCell.layers.isEmpty()) return;
             cellInfo.append("Cell pos: ").append(selectedCell.x).append(" ").append(selectedCell.y).append("\n");
-            for (CellLayers layer : selectedCell.layers) {
+            for (Layer layer : selectedCell.layers) {
                 if (layer instanceof Grass grass) {
                     cellInfo.append("Layer: Grass\nEnergy: ").append(grass.getEnergy()).append("\n");
                 } else if (layer instanceof Seed seed) {

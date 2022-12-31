@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class World implements Serializable {
     private static final Logger LOGGER = LogManager.getLogger(World.class);
-    private final ThreadChunkManager<World> chunkManager;
+    private final ChunkParallelization<World> chunkManager;
 
     private int tickCount = 0;
 
@@ -33,7 +33,7 @@ public class World implements Serializable {
 
         generator.create(this);
 
-        chunkManager = new ThreadChunkManager<>(0, width, this, (ThreadChunkManager.Chunk<World>) (world, from, to) -> {
+        chunkManager = new ChunkParallelization<>(0, width, this, (ChunkParallelization.Chunk<World>) (world, from, to) -> {
             int start = from * height;
             int end = to * height;
 

@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.time.Duration;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class WorldSimulation implements Serializable {
 
@@ -35,7 +34,7 @@ public class WorldSimulation implements Serializable {
     private transient int ticksPerMinute = 0;
     private transient int lastTicks = 0;
 
-    private @Nullable SynchronizeSimulation synchronizer;
+    private @Nullable SimulationSynchronizer synchronizer;
     private transient @Nullable WorldReplay createReplay;
     private transient volatile int worldStatus = WORLD_STOPPED;
     private transient final Object syncStart = new Object();
@@ -44,23 +43,17 @@ public class WorldSimulation implements Serializable {
         this(world, null);
     }
 
-    public WorldSimulation(World world, SynchronizeSimulation synchronizer) {
-        if (world == null) throw new IllegalArgumentException("World is null");
-
+    public WorldSimulation(@NotNull World world, @Nullable SimulationSynchronizer synchronizer) {
         this.world = world;
         this.synchronizer = synchronizer;
     }
 
-    public void start() throws InterruptedException {
+    public void start() {
         synchronized (syncStart) {
             if (isRun()) return;
 
             thread = Thread.startVirtualThread(() -> {
                 try {
-                    worldStatus = WORLD_STARTED;
-                    synchronized (syncStart) {
-                        syncStart.notify();
-                    }
                     if (synchronizer != null) synchronizer.registerWorld(this);
                     while (worldStatus == WORLD_STARTED) {
                         try {
@@ -91,7 +84,7 @@ public class WorldSimulation implements Serializable {
                     if (synchronizer != null) synchronizer.unregisterWorld(this);
                 }
             });
-            syncStart.wait();
+            worldStatus = WORLD_STARTED;
         }
     }
 
@@ -150,7 +143,7 @@ public class WorldSimulation implements Serializable {
         if (synchronizer != null) synchronizer.recalculateSynchronize();
     }
 
-    public void setSynchronizer(@Nullable SynchronizeSimulation synchronizer) {
+    public void setSynchronizer(@Nullable SimulationSynchronizer synchronizer) {
         this.synchronizer = synchronizer;
     }
 
@@ -176,7 +169,7 @@ public class WorldSimulation implements Serializable {
         }
     }
 
-    public void setCreateReplay(WorldReplay createReplay) {
+    public void setCreateReplay(@Nullable WorldReplay createReplay) {
         this.createReplay = createReplay;
     }
 }

@@ -1,4 +1,4 @@
-package com.Jeka8833.GenomeTests.console.console.commands;
+package com.Jeka8833.GenomeTests.console.commands;
 
 import com.Jeka8833.GenomeTests.util.WorldManager;
 import com.Jeka8833.GenomeTests.world.World;
@@ -44,12 +44,7 @@ public class RestartCommand implements Runnable {
                 World clone = new World(world.getWidth(), world.getHeight(), world.getGenerator());
                 clone.setName(worldNames);
                 clone.setThreadCount(world.getThreadCount());
-
-                try {
-                    worldManager.add(clone).start();
-                } catch (InterruptedException e) {
-                    LOGGER.warn("Fail start world '" + worldNames + "'");
-                }
+                worldManager.add(clone).start();
             }
         }
     }

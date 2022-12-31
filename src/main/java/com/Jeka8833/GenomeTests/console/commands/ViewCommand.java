@@ -1,4 +1,4 @@
-package com.Jeka8833.GenomeTests.console.console.commands;
+package com.Jeka8833.GenomeTests.console.commands;
 
 import com.Jeka8833.GenomeTests.testWorld.FrameManager;
 import com.Jeka8833.GenomeTests.util.WorldManager;

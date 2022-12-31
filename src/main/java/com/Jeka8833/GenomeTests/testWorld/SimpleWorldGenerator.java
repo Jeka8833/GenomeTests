@@ -19,7 +19,7 @@ public class SimpleWorldGenerator extends WorldGenerator {
     private static final int WORLD_HEIGHT = 100;
 
     public static final int GROUND_LEVEL = 30;
-    private static final int START_POPULATION = 1000;
+    private static final int START_POPULATION = 3000;
 
     private World world;
 
@@ -57,8 +57,8 @@ public class SimpleWorldGenerator extends WorldGenerator {
                 } else {
                     genome = bestGenomes[RANDOM.nextInt(bestGenomes.length)];
                 }
-                if (RANDOM.nextInt(101) <= 60) genome = genome.mutation(0.3f);
-                cell.layers.add(new Seed(genome));
+                if (RANDOM.nextInt(101) <= 60) genome = genome.mutation(128);
+                cell.layers.add(new Seed(genome, world));
             }
         }
     }
@@ -118,9 +118,9 @@ public class SimpleWorldGenerator extends WorldGenerator {
             for (int y = WORLD_HEIGHT - 1; y >= GROUND_LEVEL; y--) {
                 if (level <= 0) continue;
 
-                for (CellLayers layer : worldCells[x + y * WORLD_WIDTH].layers) {
+                for (Layer layer : worldCells[x + y * WORLD_WIDTH].layers) {
                     if (layer instanceof Wood) {
-                        level -= 3;
+                        level -= 2;
                     } else if (layer instanceof Sheet sheet) {
                         if (level > 0) sheet.getTreeLive().addHeath(Math.min(7, level));
 
@@ -133,7 +133,7 @@ public class SimpleWorldGenerator extends WorldGenerator {
 
             if (level > 0) {
                 Grass firstLayer = world.getCell(x, GROUND_LEVEL - 1).getLayer(Grass.class);
-                if (firstLayer != null) firstLayer.addEnergy(level);
+                if (firstLayer != null) firstLayer.addEnergy(level / 16f);
             }
 
             for (int y = 1; y < GROUND_LEVEL; y++) {
@@ -174,7 +174,7 @@ public class SimpleWorldGenerator extends WorldGenerator {
     public static World createWorld(WorldManager worldManager, int number, Genome[] bestGenomes) {
         var world = new World(WORLD_WIDTH, WORLD_HEIGHT, new SimpleWorldGenerator(worldManager, bestGenomes));
         world.setName("TestWorld-" + number);
-        world.setThreadCount(11);
+        world.setThreadCount(12);
         return world;
     }
 

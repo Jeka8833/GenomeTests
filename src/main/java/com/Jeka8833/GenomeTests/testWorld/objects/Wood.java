@@ -13,9 +13,7 @@ public class Wood extends TreeBlock {
 
     @Override
     public void tick(Cell cell) {
-        getTreeLive().addHeath(-5);
-
-        if (getTreeLive().isDead(cell.world)) {
+        if (getTreeLive().addHeathAndCheckDead(-10)) {
             cell.layers.remove(this);
         } else {
             Grass grass = cell.getLayer(Grass.class);

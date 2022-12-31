@@ -11,7 +11,6 @@ public class Sheet extends TreeBlock {
 
     @Override
     public void tick(Cell cell) {
-        getTreeLive().addHeath(-1);
-        if (getTreeLive().isDead(cell.world)) cell.layers.remove(this);
+        if (getTreeLive().addHeathAndCheckDead(-1)) cell.layers.remove(this);
     }
 }

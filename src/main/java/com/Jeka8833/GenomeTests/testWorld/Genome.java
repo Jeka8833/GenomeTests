@@ -15,10 +15,8 @@ public record Genome(int[] chromosomes, int startIndex) implements Serializable 
                 (startIndex() + genome.startIndex()) / 2);
     }
 
-    public Genome mutation(float percent) {
-        return new Genome(
-                mutation(chromosomes, percent),
-                startIndex() + RANDOM.nextInt((int) (chromosomes.length * percent)));
+    public Genome mutation(int bitCount) {
+        return new Genome(mutation(chromosomes, bitCount), startIndex());
     }
 
     public static Genome createGenome(int chromosomesCount) {
@@ -37,18 +35,18 @@ public record Genome(int[] chromosomes, int startIndex) implements Serializable 
         return newChromosomes;
     }
 
-    public static int[] mutation(int[] chromosomes, float percent) {
+    public static int[] mutation(int[] chromosomes, int bitCount) {
         int[] newChromosomes = chromosomes.clone();
 
-        int mutateInChromosomes = (int) (32 * percent);
-        for (int i = 0; i < chromosomes.length; i++) {
-            for (int j = 0; j < mutateInChromosomes; j++) {
-                int bit = 1 << RANDOM.nextInt(32);
-                if ((newChromosomes[i] & bit) == bit)
-                    newChromosomes[i] &= ~bit;
-                else
-                    newChromosomes[i] |= bit;
-            }
+        for (int i = 0; i < bitCount; i++) {
+            int index = RANDOM.nextInt(newChromosomes.length << 5);
+            int chromosomeIndex = index >> 5;
+            int bit = 1 << (index % 32);
+
+            if ((newChromosomes[chromosomeIndex] & bit) == bit)
+                newChromosomes[chromosomeIndex] &= ~bit;
+            else
+                newChromosomes[chromosomeIndex] |= bit;
         }
         return newChromosomes;
     }

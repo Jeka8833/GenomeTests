@@ -2,6 +2,6 @@ package com.Jeka8833.GenomeTests.world;
 
 import java.io.Serializable;
 
-public interface CellLayers extends Serializable {
+public interface Layer extends Serializable {
     void tick(Cell cell);
 }

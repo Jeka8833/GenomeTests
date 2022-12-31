@@ -1,8 +1,7 @@
-package com.Jeka8833.GenomeTests.console.console.commands;
+package com.Jeka8833.GenomeTests.console.commands;
 
 import com.Jeka8833.GenomeTests.util.FileSaver;
 import com.Jeka8833.GenomeTests.util.WorldManager;
-import com.Jeka8833.GenomeTests.world.World;
 import com.Jeka8833.GenomeTests.world.WorldSimulation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

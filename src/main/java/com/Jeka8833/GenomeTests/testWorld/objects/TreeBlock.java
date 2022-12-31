@@ -1,9 +1,9 @@
 package com.Jeka8833.GenomeTests.testWorld.objects;
 
 import com.Jeka8833.GenomeTests.testWorld.TreeLive;
-import com.Jeka8833.GenomeTests.world.CellLayers;
+import com.Jeka8833.GenomeTests.world.Layer;
 
-public abstract class TreeBlock implements CellLayers {
+public abstract class TreeBlock implements Layer {
 
     private final TreeLive treeLive;
     private int startGen;
