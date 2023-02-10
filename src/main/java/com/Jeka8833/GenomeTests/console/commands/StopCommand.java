@@ -36,5 +36,6 @@ public class StopCommand implements Runnable {
                 simulation.stop();
             }
         }
+        LOGGER.info("The stop command has been completed");
     }
 }

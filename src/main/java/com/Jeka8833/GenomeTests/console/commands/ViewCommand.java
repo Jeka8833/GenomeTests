@@ -71,6 +71,7 @@ public class ViewCommand implements Runnable {
                 }
             }
         }
+        LOGGER.info("The view command has been completed");
     }
 
     public static void addPalette(String name, Class<? extends FormLayer> palette) {

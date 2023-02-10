@@ -37,5 +37,6 @@ public class RemoveCommand implements Runnable {
                 worldManager.remove(simulation);
             }
         }
+        LOGGER.info("The remove command has been completed");
     }
 }

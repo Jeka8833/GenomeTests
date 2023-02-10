@@ -49,5 +49,6 @@ public class LoadCommand implements Runnable {
         } else {
             LOGGER.info("Incorrect path");
         }
+        LOGGER.info("The load command has been completed");
     }
 }

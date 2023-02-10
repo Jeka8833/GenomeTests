@@ -36,5 +36,6 @@ public class StartCommand implements Runnable {
                 simulation.start();
             }
         }
+        LOGGER.info("The start command has been completed");
     }
 }

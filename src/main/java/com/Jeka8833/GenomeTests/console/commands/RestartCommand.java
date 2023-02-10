@@ -47,5 +47,6 @@ public class RestartCommand implements Runnable {
                 worldManager.add(clone).start();
             }
         }
+        LOGGER.info("The restart command has been completed");
     }
 }

@@ -1,5 +1,6 @@
 package com.Jeka8833.GenomeTests;
 
+import com.Jeka8833.GenomeTests.console.CommandProcessor;
 import com.Jeka8833.GenomeTests.console.ConsoleGUI;
 import com.Jeka8833.GenomeTests.console.ConsoleHook;
 import com.Jeka8833.GenomeTests.testWorld.FrameManager;
@@ -14,6 +15,7 @@ public class Main {
 
     public static void main(String[] args) {
         ConsoleHook.initHook();
+        ConsoleHook.initConsoleInputHook();
 
         SimulationSynchronizer synchronize = new SimulationSynchronizer();
         WorldManager worldManager = new WorldManager();
@@ -37,6 +39,8 @@ public class Main {
 
         ConsoleGUI consoleGUI = ConsoleGUI.create();
         consoleGUI.setTimeManager(worldManager);
+
+        ConsoleHook.addInputListener(text -> CommandProcessor.process(worldManager, text.split(" ")));
 
         Runtime.getRuntime().addShutdownHook(new Thread(WindowManager::clearAll));
     }

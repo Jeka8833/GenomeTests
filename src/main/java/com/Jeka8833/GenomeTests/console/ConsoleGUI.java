@@ -141,7 +141,7 @@ public class ConsoleGUI extends javax.swing.JFrame {
         });
         timer.start();
 
-        ConsoleHook.addListener((text) -> console.logPaneUI.append(text));
+        ConsoleHook.addOutputListener((text) -> console.logPaneUI.append(text));
 
         java.awt.EventQueue.invokeLater(() -> {
             console.initComponents();

@@ -49,5 +49,6 @@ public class SaveCommand implements Runnable {
                 LOGGER.error("Fail save world: " + worldNames, e);
             }
         }
+        LOGGER.info("The save command has been completed");
     }
 }

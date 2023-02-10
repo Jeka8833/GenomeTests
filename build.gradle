@@ -53,6 +53,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.19.0'
 
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-iostreams
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-iostreams', version: '2.19.0'
+
     // https://mvnrepository.com/artifact/info.picocli/picocli
     implementation group: 'info.picocli', name: 'picocli', version: '4.7.0'
     annotationProcessor 'info.picocli:picocli-codegen:4.7.0'

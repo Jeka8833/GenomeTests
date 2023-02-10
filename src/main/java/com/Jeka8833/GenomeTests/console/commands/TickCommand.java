@@ -29,7 +29,7 @@ public class TickCommand implements Runnable {
     @Override
     public void run() {
         if (count < 1) throw new CommandLine.ParameterException(spec.commandLine(),
-                String.format("Invalid value '%s' for option '-c'. Range: [1-]" + Integer.MAX_VALUE, count));
+                String.format("Invalid value '%s' for option '-c'. Range: [1-" + Integer.MAX_VALUE + "]", count));
 
         if (worlds.length > 0 && worlds[0].equalsIgnoreCase("all"))
             worlds = worldManager.getWorlds().stream()
@@ -50,5 +50,6 @@ public class TickCommand implements Runnable {
                 }
             }
         }
+        LOGGER.info("The tick command has been completed");
     }
 }
